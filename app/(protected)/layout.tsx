@@ -26,17 +26,23 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { Analytics } from '@vercel/analytics/react';
-import { User } from './user';
+import { User } from './(dashboard)/user';
 import { VercelLogo } from '@/components/icons';
-import Providers from './providers';
-import { NavItem } from './nav-item';
-import { SearchInput } from './search';
+import Providers from './(dashboard)/providers';
+import { NavItem } from './(dashboard)/nav-item';
+import { SearchInput } from './(dashboard)/search';
+import { getCurrentUser } from '@/lib/session';
+import { redirect } from 'next/navigation';
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
+
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
   return (
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
