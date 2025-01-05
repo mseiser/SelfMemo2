@@ -11,7 +11,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 
-export async function User() {
+export function User() {
+
+  const { data: session } = useSession();
 
   return (
     <DropdownMenu>
@@ -31,12 +33,8 @@ export async function User() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>{session?.user.email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
-        <DropdownMenuSeparator />
-
         <DropdownMenuItem>
           <button onClick={() => signOut()}>Sign Out</button>
         </DropdownMenuItem>
