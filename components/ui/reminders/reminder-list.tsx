@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Reminder } from '@prisma/client';
+import { capitalizeWords } from '@/lib/utils';
 
 const ReminderList: React.FC = () => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
@@ -46,7 +47,7 @@ const ReminderList: React.FC = () => {
               <div>
                 <div className="text-lg font-semibold">{reminder.name}</div>
                 <div className="text-gray-500">
-                  <p>User ID: {reminder.userId}</p>
+                  <p>Type: {capitalizeWords(reminder.type)}</p>
                   {reminder.belongsTo && <p>Parent Reminder ID: {reminder.belongsTo}</p>}
                 </div>
               </div>
