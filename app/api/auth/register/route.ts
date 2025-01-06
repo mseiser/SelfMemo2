@@ -26,5 +26,4 @@ export async function POST(request: NextRequest) {
         }
         return new Response(error.message, { status: 500 });
     }
-
 }

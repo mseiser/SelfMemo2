@@ -39,8 +39,6 @@ export const {
 
         const { email, password } = credentials;
 
-        console.log("Test", credentials);
-
         const user = await prisma.user.findUnique({
           where: {
             email: email,

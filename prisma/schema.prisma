@@ -42,12 +42,13 @@ model Session {
 }
 
 model User {
-  id       String    @id @default(cuid())
-  email    String    @unique
+  id       String     @id @default(cuid())
+  email    String     @unique
   password String
   role     String
   accounts Account[]
   sessions Session[]
+  Reminder Reminder[]
 
   @@map("users")
 }
@@ -59,4 +60,21 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Reminder {
+  id          String  @id @default(cuid())
+  userId      String  @map("user_id")
+  name        String
+  description String
+  type        String
+  config       String // contains json, but json datatype not supported in sqlite
+  isDisabled  Boolean
+  belongsTo   String? @map("reminder_id")
+
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentReminder Reminder?  @relation("ParentChild", fields: [belongsTo], references: [id], onDelete: Cascade)
+  childReminders Reminder[] @relation("ParentChild")
+
+  @@map("reminders")
 }
