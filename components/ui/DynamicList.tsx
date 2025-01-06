@@ -1,6 +1,6 @@
 "use client";
 import { FC, useState } from "react";
-import { classNames } from "utils/helper";
+import { classNames } from "@/lib/utils";
 import { useRouter, usePathname } from "next/navigation";
 import Pagination from "./Pagination";
 import { useSWRConfig } from "swr";

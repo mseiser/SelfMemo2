@@ -34,6 +34,10 @@ export class ReminderService {
         return await this.reminderRepository.getAll();
     }
 
+    async getAllByUserId(userId: string) {
+        return await this.reminderRepository.getAllByUserId(userId);
+    }
+
     async getSingleWithChildReminders(reminderId: string) {
         const reminderWithChildren = await prisma.reminder.findUnique({
             where: { id: reminderId },

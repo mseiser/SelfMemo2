@@ -42,3 +42,7 @@ export function isTodaySetToTrue(dayObject: any) {
 
   return dayObject[currentDay] === true;
 }
+
+export function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
