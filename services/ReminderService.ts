@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { CreateReminderDto } from "@/lib/validations/reminder";
+import { CreateReminderDto, UpdateReminderDto } from "@/lib/validations/reminder";
 import IReminderRepository from "repositories/IReminderRepository";
 import { ReminderRepository } from "repositories/ReminderRepository";
 
@@ -23,7 +23,7 @@ export class ReminderService {
         return await this.reminderRepository.create(reminder);
     }
 
-    async updateReminder(reminder: CreateReminderDto) {
+    async updateReminder(reminder: UpdateReminderDto) {
         return await this.reminderRepository.update(reminder);
     }
 

@@ -1,7 +1,7 @@
 import { Reminder } from "@prisma/client";
 import { BaseRepository } from "./BaseRepository";
 import IReminderRepository from "./IReminderRepository";
-import { CreateReminderDto } from "@/lib/validations/reminder";
+import { CreateReminderDto, UpdateReminderDto } from "@/lib/validations/reminder";
 
 export class ReminderRepository extends BaseRepository implements IReminderRepository {
     async create(reminder: CreateReminderDto): Promise<Reminder> {
@@ -16,7 +16,7 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
         );
     }
 
-    async update(reminder: Reminder): Promise<Reminder> {
+    async update(reminder: UpdateReminderDto): Promise<Reminder> {
         return await this.prisma.reminder.update({
             where: {
                 id: reminder.id,
