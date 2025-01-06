@@ -36,8 +36,35 @@ export default function UsersPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [role, setRole] = useState<string>("");
+  const [errors, setErrors] = useState<{ email?: string; password?: string; role?: string }>({});
+
+  const validateFields = () => {
+    const newErrors: { email?: string; password?: string; role?: string } = {};
+
+    if (!email) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      newErrors.email = "Invalid email format.";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required.";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters.";
+    }
+
+    if (!role) {
+      newErrors.role = "Role is required.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleCreateUser = async () => {
+    if (!validateFields()) return;
+
     try {
       const response = await fetch("/api/users", {
         method: "POST",
@@ -54,6 +81,7 @@ export default function UsersPage() {
       setRole("");
       setPassword("");
       mutate(url);
+
     } catch (error) {
       console.error("Error creating user:", error);
       toast.error("Error creating user", "An error occurred while creating the user.");
@@ -62,59 +90,72 @@ export default function UsersPage() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Users</CardTitle>
-        <CardDescription>Manage all of your users.</CardDescription>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button className="mt-4">Create User</Button>
-          </SheetTrigger>
-          <SheetContent side="right">
-            <SheetHeader>
-              <SheetTitle>Create User</SheetTitle>
-              <SheetDescription>
-                Enter the details of the new user below.
-              </SheetDescription>
-            </SheetHeader>
-            <div className="space-y-4 mt-4">
-              <div>
-                <label className="block text-sm font-medium">Email:</label>
-                <Input
-                  value={email}
-                  type='email'
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter user email"
-                />
+      <CardHeader className="flex items-center justify-between flex-row">
+        <div>
+          <CardTitle>Users</CardTitle>
+          <CardDescription>Manage all of your users.</CardDescription>
+        </div>
+        <div>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button className="mt-4">Create User</Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle>Create User</SheetTitle>
+                <SheetDescription>
+                  Enter the details of the new user below.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="space-y-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium">Email:</label>
+                  <Input
+                    value={email}
+                    type='email'
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter user email"
+                  />
+                  {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">Password:</label>
+                  <Input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type='password'
+                    placeholder="Enter user role"
+                  />
+                  {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">Role:</label>
+
+                  <select
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-md"
+                  >
+                    <option value="" disabled>
+                      Select a role
+                    </option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                  </select>
+                  {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role}</p>}
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium">Password:</label>
-                <Input
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  type='password'
-                  placeholder="Enter user role"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium">Role:</label>
-                <Input
-                  value={role}
-                  type='text'
-                  onChange={(e) => setRole(e.target.value)}
-                  placeholder="Enter user role"
-                />
-              </div>
-            </div>
-            <SheetFooter>
-              <Button onClick={handleCreateUser} className="mr-2">
-                Submit
-              </Button>
-              <SheetClose asChild>
-                <Button variant="secondary">Cancel</Button>
-              </SheetClose>
-            </SheetFooter>
-          </SheetContent>
-        </Sheet>
+              <SheetFooter className='mt-4'>
+                <Button onClick={handleCreateUser} className="mr-2">
+                  Submit
+                </Button>
+                <SheetClose asChild>
+                  <Button variant="secondary">Cancel</Button>
+                </SheetClose>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+        </div>
       </CardHeader>
       <CardContent>
 

@@ -81,6 +81,8 @@ const DynamicList: FC<INFDynamicList> = ({
       if (mutateKey) {
         mutate(mutateKey);
       }
+
+      setSelectedData([]);
     } catch (error) {
       console.error("Error in bulkDelete:", error);
     }

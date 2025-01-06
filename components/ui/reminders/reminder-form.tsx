@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { CreateReminderSchema, UpdateReminderSchema } from '@/lib/validations/reminder';
 import { Reminder } from '@prisma/client';
 import { redirect } from 'next/dist/server/api-utils';
+import { useToast } from 'hooks/useToast';
 
 type ReminderFormInputs = {
   id: string;
@@ -34,6 +35,7 @@ const defaultReminderValues: ReminderFormInputs = {
 };
 
 export default function ReminderForm({ reminder }: ReminderFormProps) {
+  const toast = useToast();
   const [isUpdate, setIsUpdate] = useState(false);
   const [formData, setFormData] = useState<ReminderFormInputs>(defaultReminderValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -118,18 +120,18 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
       
       if (isUpdate) {
         await axios.put(`/api/reminders/${formData.id ?? ''}`, newFormData);
-        alert('Reminder updated successfully!');
+        toast.success('Reminder updated!', 'You have successfully updated the reminder.');
       } else {
         await axios.post('/api/reminders', newFormData);
-        alert('Reminder created successfully!');
+        toast.success('Reminder created!', 'You have successfully created a new reminder.');
       }
     } catch (error) {
       console.error(error);
 
       if (isUpdate) {
-        alert('Failed to update reminder.');
+        toast.error('Failed to update reminder.', 'An error occurred while updating the reminder.');
       } else {
-        alert('Failed to create reminder.');
+        toast.error('Failed to create reminder.', 'An error occurred while creating the reminder.');
       }
       
     } finally {

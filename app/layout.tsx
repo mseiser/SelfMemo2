@@ -4,9 +4,9 @@ import { Analytics } from '@vercel/analytics/react';
 import { Toaster } from "react-hot-toast";
 
 export const metadata = {
-  title: 'Next.js App Router + NextAuth + Tailwind CSS',
+  title: 'Reminder App - Manage your reminders',
   description:
-    'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
+    'A simple reminder app to help you manage your reminders.',
 };
 
 export default function RootLayout({
