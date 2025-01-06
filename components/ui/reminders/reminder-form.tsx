@@ -3,16 +3,27 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { z } from 'zod';
-import { CreateReminderSchema } from '@/lib/validations/reminder';
+import { CreateReminderSchema, UpdateReminderSchema } from '@/lib/validations/reminder';
 import { Reminder } from '@prisma/client';
+import { redirect } from 'next/dist/server/api-utils';
 
-type ReminderFormInputs = z.infer<typeof CreateReminderSchema>;
+type ReminderFormInputs = {
+  id: string;
+  userId: string;
+  name: string;
+  description: string;
+  type: string;
+  config: string;
+  isDisabled: boolean;
+  belongsTo: string | null;
+};
 
 interface ReminderFormProps {
   reminder?: Reminder;
 }
 
-const defaultReminderValues = {
+const defaultReminderValues: ReminderFormInputs = {
+  id: '',
   userId: '',
   name: '',
   description: '',
@@ -44,29 +55,43 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
     setOneTimeTimestamp(e.target.value);
   };
 
+  const [dailyTime, setDailyTime] = useState<string>('00:00');
+  const handleDailyTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDailyTime(e.target.value);
+  };
+  const [days, setDays] = useState({
+    monday: true,
+    tuesday: true,
+    wednesday: true,
+    thursday: true,
+    friday: true,
+    saturday: true,
+    sunday: true,
+  });
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target;
+    setDays((prevDays) => ({
+      ...prevDays,
+      [name]: checked,
+    }));
+  };
+
   useEffect(() => {
     if (reminder) {
       setIsUpdate(true);
-      setFormData({
-        userId: reminder.userId,
-        name: reminder.name || defaultReminderValues.name,
-        description: reminder.description || defaultReminderValues.description,
-        type: reminder.type || defaultReminderValues.type,
-        config: reminder.config || defaultReminderValues.config,
-        isDisabled: reminder.isDisabled || defaultReminderValues.isDisabled,
-        belongsTo: reminder.belongsTo || null,
-      });
+      setFormData(reminder);
 
-      switch(formData.type) {
+      switch(reminder.type) {
         case 'one-time':
           setOneTimeTimestamp(formatDate(JSON.parse(reminder.config).timestamp));
           break;
         case 'daily':
+          setDailyTime(JSON.parse(reminder.config).time as string);
+          setDays(JSON.parse(reminder.config).repeat);
           break;
         default:
           break;
       };
-
     }
   }, [reminder]);
 
@@ -80,7 +105,6 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // if (!validateForm()) return;
 
     setIsSubmitting(true);
     try {
@@ -91,13 +115,23 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
         ...formData,
         config: JSON.stringify(newConfig),
       };
-
-      await axios.put('/api/reminders', newFormData);
-      alert('Reminder created successfully!');
-      setFormData(defaultReminderValues);
+      
+      if (isUpdate) {
+        await axios.put(`/api/reminders/${formData.id ?? ''}`, newFormData);
+        alert('Reminder updated successfully!');
+      } else {
+        await axios.post('/api/reminders', newFormData);
+        alert('Reminder created successfully!');
+      }
     } catch (error) {
       console.error(error);
-      alert('Failed to create reminder.');
+
+      if (isUpdate) {
+        alert('Failed to update reminder.');
+      } else {
+        alert('Failed to create reminder.');
+      }
+      
     } finally {
       setIsSubmitting(false);
     }
@@ -109,19 +143,11 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
 
       switch(type) {
         case 'one-time':
-          newConfig.timestamp = new Date((document.getElementById('oneTimeDateTimestamp') as HTMLInputElement).value).getTime() / 1000;
+          newConfig.timestamp = new Date(oneTimeTimestamp).getTime() / 1000;
           break;
         case 'daily':
-          newConfig.time = (document.getElementById('dailyTime') as HTMLInputElement).value;
-          newConfig.repeat = {
-            monday: (document.getElementById('repeatMonday') as HTMLInputElement).checked,
-            tuesday: (document.getElementById('repeatTuesday') as HTMLInputElement).checked,
-            wednesday: (document.getElementById('repeatWednesday') as HTMLInputElement).checked,
-            thursday: (document.getElementById('repeatThursday') as HTMLInputElement).checked,
-            friday: (document.getElementById('repeatFriday') as HTMLInputElement).checked,
-            saturday: (document.getElementById('repeatSaturday') as HTMLInputElement).checked,
-            sunday: (document.getElementById('repeatSunday') as HTMLInputElement).checked,
-          };
+          newConfig.time = dailyTime;
+          newConfig.repeat = days;
           break;
       }
 
@@ -206,19 +232,26 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           <label className="block text-gray-700 font-medium mb-2" htmlFor="dailyTime">
             Daily
           </label>
-          <input value={JSON.parse(formData.config).time} type="time" id="dailyTime" name="dailyTime" className={`w-full p-2 border rounded-lg ${
+          <input onChange={handleDailyTimeChange} value={dailyTime} type="time" id="dailyTime" name="dailyTime" className={`w-full p-2 border rounded-lg ${
             errors.name ? 'border-red-500' : 'border-gray-300'
           }`} />
           <p className="mt-2">Repeat:</p>
-          <p>
-            <input type="checkbox" id="repeatMonday" name="repeatMonday" defaultChecked /> Monday
-            <input type="checkbox" id="repeatTuesday" name="repeatTuesday" className="ml-2" defaultChecked /> Tuesday
-            <input type="checkbox" id="repeatWednesday" name="repeatWednesday" className="ml-2" defaultChecked /> Wednesday
-            <input type="checkbox" id="repeatThursday" name="repeatThursday" className="ml-2" defaultChecked /> Thursday
-            <input type="checkbox" id="repeatFriday" name="repeatFriday" className="ml-2" defaultChecked /> Friday
-            <input type="checkbox" id="repeatSaturday" name="repeatSaturday" className="ml-2" defaultChecked /> Saturday
-            <input type="checkbox" id="repeatSunday" name="repeatSunday" className="ml-2" defaultChecked /> Sunday
-          </p>
+          <div>
+          {Object.entries(days).map(([day, isChecked]) => (
+            <div key={day}>
+              <label>
+                <input
+                  className="mr-2"
+                  type="checkbox"
+                  name={day}
+                  checked={isChecked}
+                  onChange={handleCheckboxChange}
+                />
+                {day.charAt(0).toUpperCase() + day.slice(1)}
+              </label>
+            </div>
+          ))}
+          </div>
         </div>
       )}
 
