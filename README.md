@@ -15,11 +15,13 @@ ADMIN_EMAIL=
 ADMIN_NAME=
 ADMIN_PASSWORD=
 
+- npx prisma migrate dev
 - npm run dev
 - hit GET http://localhost:3000/api/seed to set a admin user
 
 ### Deploy the application
 WIP
+
 Basic steps:
 - Fork this repository
 - Create Vercel account
