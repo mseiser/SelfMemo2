@@ -132,11 +132,11 @@ function MobileNav({ isAdmin }: { isAdmin: boolean }) {
           </Link> : null}
 
           <Link
-            href="/users"
+            href="/reminders"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <Calendar className="h-5 w-5" />
-            Users
+            Reminders
           </Link>
 
           <Link

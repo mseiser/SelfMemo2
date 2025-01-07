@@ -17,7 +17,7 @@ const NoSearchResults = () => {
       </svg>
 
       <h3 className="mt-2 text-sm font-semibold text-gray-900">
-        Keine Ergebnisse
+        No results
       </h3>
     </div>
   );

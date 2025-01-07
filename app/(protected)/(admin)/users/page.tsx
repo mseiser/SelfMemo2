@@ -165,7 +165,9 @@ export default function UsersPage() {
           mutateKey={url}
           fields={["id", "email", "role"]}
           combineFieldsCallbacks={{}}
-          fieldFormatter={{}}
+          fieldFormatter={{
+            role: (role) => role.charAt(0).toUpperCase() + role.slice(1),
+          }}
           labelFormatter={{}}
           filters={false}
           showEditButton={false}

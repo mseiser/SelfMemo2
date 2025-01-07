@@ -90,3 +90,13 @@ input[type='search']::-moz-search-cancel-button {
 input[type='search']::-ms-clear {
   display: none;
 }
+
+/*Disable dev popups*/
+nextjs-portal {
+  display: none;
+}
+
+body {
+  padding: 0 !important; 
+  overflow: auto !important;
+}
