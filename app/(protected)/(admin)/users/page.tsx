@@ -98,7 +98,7 @@ export default function UsersPage() {
         <div>
           <Sheet>
             <SheetTrigger asChild>
-              <Button className="mt-4">Create User</Button>
+              <Button >Create User</Button>
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader>

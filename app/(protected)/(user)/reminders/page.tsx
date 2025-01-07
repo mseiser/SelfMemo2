@@ -1,3 +1,5 @@
+"use client";
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -5,9 +7,29 @@ import {
     CardHeader,
     CardTitle
 } from '@/components/ui/card';
+import DynamicList from '@/components/ui/DynamicList';
 import ReminderList from '@/components/ui/reminders/reminder-list';
+import { Reminder } from '@prisma/client';
+import { useApiSwr } from 'hooks/useApiSwr';
+import { useToast } from 'hooks/useToast';
+import { useRouter } from 'next/navigation';
 
 export default function RemindersPage() {
+
+    const url = "/api/reminders";
+
+    const toast = useToast();
+
+    const { data, error, isLoading } = useApiSwr<Reminder[]>(url);
+
+    const router = useRouter();
+
+    const handleCreateReminder = () => {
+        router.push('/reminders/create');
+    };
+
+    console.log(data);
+
     return (
         <Card>
             <CardHeader>
@@ -16,13 +38,29 @@ export default function RemindersPage() {
                         <CardTitle>Reminders</CardTitle>
                         <CardDescription>Manage all of your reminders.</CardDescription>
                     </div>
-                    <a href="/reminders/create" className="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        Create new
-                    </a>
+                    <Button onClick={() => handleCreateReminder()} >
+                        Create Reminder
+                    </Button>
                 </div>
             </CardHeader>
             <CardContent>
-                <ReminderList />
+                <DynamicList
+                    data={data || []}
+                    entity="reminders"
+                    mutateKey={url}
+                    fields={["name", "type", "isDisabled"]}
+                    combineFieldsCallbacks={{}}
+                    fieldFormatter={{
+                        isDisabled: (value) => value ? "Disabled" : "Active",
+                        type: (value) => value.charAt(0).toUpperCase() + value.slice(1)
+                    }}
+                    labelFormatter={{
+                        isDisabled: () => "Status"
+                    }}
+                    filters={false}
+                    showEditButton={true}
+                    entityButtonText="Edit"
+                />
             </CardContent>
         </Card>
     );

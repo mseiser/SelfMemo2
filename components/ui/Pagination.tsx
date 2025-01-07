@@ -28,8 +28,8 @@ const Pagination: FC<INFPagination> = ({ totalPages, currentPage, handlePageChan
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Seite <span className="font-medium text-black">{currentPage}</span> von <span className="font-medium text-black">{totalPages}</span> von insgesamt{' '}
-            <span className="font-medium text-black">{totalItems}</span> Ergebnissen
+            Page <span className="font-medium text-black">{currentPage}</span> of <span className="font-medium text-black">{totalPages}</span> out of a total of{' '}
+            <span className="font-medium text-black">{totalItems}</span> results
           </p>
         </div>
         <div>

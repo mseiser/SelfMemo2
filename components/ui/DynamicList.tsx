@@ -243,7 +243,7 @@ const DynamicList: FC<INFDynamicList> = ({
                         className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
                         onClick={() => bulkDelete(entity ?? "")}
                       >
-                        Löschen
+                        Delete
                       </button>
                     ) : null}
                     {renderBulkActions()}
@@ -339,12 +339,12 @@ const DynamicList: FC<INFDynamicList> = ({
                         <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                           {showEditButton ? (
                             <span
-                              className="text-indigo-600 hover:text-indigo-900"
+                              className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
                               onClick={() => router.push(`${path}/${item.id}`)}
                             >
                               {entityButtonText
                                 ? entityButtonText
-                                : "Bearbeiten"}
+                                : "Edit"}
                             </span>
                           ) : (
                             <></>

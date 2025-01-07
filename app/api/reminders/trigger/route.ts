@@ -1,5 +1,5 @@
 import { ReminderService } from "services/ReminderService";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { isTimeSetToCurrentTime, isTimestampSetToCurrentMinute, isTodaySetToTrue } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
