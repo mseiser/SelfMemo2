@@ -2,11 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { z } from 'zod';
-import { CreateReminderSchema, UpdateReminderSchema } from '@/lib/validations/reminder';
 import { Reminder } from '@prisma/client';
-import { redirect } from 'next/dist/server/api-utils';
 import { useToast } from 'hooks/useToast';
+import { useRouter } from 'next/navigation';
 
 type ReminderFormInputs = {
   id: string;
@@ -40,6 +38,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
   const [formData, setFormData] = useState<ReminderFormInputs>(defaultReminderValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const formatDate = (timestamp: number): string => {
     const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
@@ -125,6 +124,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
         await axios.post('/api/reminders', newFormData);
         toast.success('Reminder created!', 'You have successfully created a new reminder.');
       }
+      router.push('/reminders');
     } catch (error) {
       console.error(error);
 
