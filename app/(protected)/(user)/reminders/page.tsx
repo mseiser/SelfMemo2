@@ -28,8 +28,6 @@ export default function RemindersPage() {
         router.push('/reminders/create');
     };
 
-    console.log(data);
-
     return (
         <Card>
             <CardHeader>
