@@ -17,6 +17,10 @@ type ReminderFormDataType = {
   isDisabled: boolean;
   belongsTo: string | null;
   lastSent: string | null;
+  hasWarnings: boolean;
+  warningNumber: number | null;
+  warningInterval: string | null;
+  warningIntervalNumber: number | null;
 };
 
 interface ReminderFormProps {
@@ -33,6 +37,10 @@ const defaultReminderValues: ReminderFormDataType = {
   isDisabled: false,
   belongsTo: null,
   lastSent: null,
+  hasWarnings: false,
+  warningNumber: null,
+  warningInterval: null,
+  warningIntervalNumber: null,
 };
 
 export default function ReminderForm({ reminder }: ReminderFormProps) {
@@ -93,7 +101,13 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
     const { name, value } = e.target;
     setReminderFormData((prev) => ({
       ...prev,
-      [name]: name === 'timestamp' ? Number(value) : value,
+      [name]: name === 'timestamp' || name === 'warningNumber' || name === 'warningIntervalNumber' ? Number(value) : value,
+    }));
+  };
+  const handleWarningCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setReminderFormData((prev) => ({
+      ...prev,
+      hasWarnings: event.target.checked,
     }));
   };
 
@@ -110,6 +124,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
         config: JSON.stringify(newConfig),
       };
       
+      console.log(newFormData);
       if (isUpdate) {
         await axios.put(`/api/reminders/${reminderFormData.id ?? ''}`, newFormData);
         toast.success('Reminder updated!', 'You have successfully updated the reminder.');
@@ -279,6 +294,20 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
     setYearlyTime(e.target.value);
   };
 
+  /** WARNING PROPS */
+  // const [warningInterval, setWarningInterval] = useState<string>('minutes');
+  // const handleWarningIntervalChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setWarningInterval(e.target.value);
+  // };
+  // const [warningNumber, setWarningNumber] = useState<number>(1);
+  // const handleWarningNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setWarningNumber(parseInt(e.target.value));
+  // };
+  // const [warningIntervalNumber, setWarningIntervalNumber] = useState<number>(1);
+  // const handleWarningIntervalNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setWarningIntervalNumber(parseInt(e.target.value));
+  // };
+
   return (
     <form onSubmit={handleSubmit}>
 
@@ -407,7 +436,6 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           }`} />
         </div>
       )}
-
       {reminderFormData.type === 'n-weekly' && (
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2" htmlFor="weeklyDay">
@@ -427,7 +455,6 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           }`} />
         </div>
       )}
-
       {reminderFormData.type === 'monthly' && (
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2" htmlFor="weeklyDay">
@@ -493,7 +520,6 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           </div>         
         </div>
       )}
-
       {reminderFormData.type === 'yearly' && (
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2" htmlFor="weeklyDay">
@@ -582,6 +608,44 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           }`} />     
         </div>
       )}
+
+      {/* Warnings */}
+      <input
+        className=""
+        type="checkbox"
+        name="hasWarnings"
+        id="hasWarnings"
+        checked={reminderFormData.hasWarnings}
+        onChange={handleWarningCheckboxChange}
+      /> <label htmlFor="hasWarnings">Enable Warning Reminders</label>
+      {reminderFormData.hasWarnings && (
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="type">
+            Warning Reminders
+          </label>
+          Additionally, before sending the final reminder, send me
+          <input onChange={handleChange} value={reminderFormData.warningNumber ?? 1} id="warningNumber" name="warningNumber" type="number" className="mx-2 w-12 p-2 border rounded-lg" />
+          reminder(s)
+          <input onChange={handleChange} value={reminderFormData.warningIntervalNumber ?? 1} id="warningIntervalNumber" name="warningIntervalNumber" type="number" className="mx-2 w-12 p-2 border rounded-lg" />
+          <select
+            id="warningInterval"
+            name="warningInterval"
+            value={reminderFormData.warningInterval || 'minute'}
+            onChange={handleChange}
+            className={`mx-2 p-2 border rounded-lg ${
+              formErrors.type ? 'border-red-500' : 'border-gray-300'
+            }`}
+          >
+            <option value="minute">Minutes</option>
+            <option value="hour">Hours</option>
+            <option value="week">Weeks</option>
+            <option value="month">Months</option>
+            <option value="year">Years</option>
+          </select>
+          apart.
+        </div>
+      )}
+      
 
       {/* Submit Button */}
       <button

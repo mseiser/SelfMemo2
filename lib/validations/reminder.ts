@@ -20,6 +20,10 @@ export const CreateReminderSchema = z.object({
   isDisabled: z.boolean().optional().default(false),
   belongsTo: z.string().optional().nullable(),
   lastSent: z.string().optional().nullable(),
+  hasWarnings: z.boolean().optional().default(false),
+  warningNumber: z.number().optional().nullable(),
+  warningInterval: z.string().optional().nullable(),
+  warningIntervalNumber: z.number().optional().nullable(),
 });
 
 
@@ -43,6 +47,10 @@ export const UpdateReminderSchema = z.object({
   isDisabled: z.boolean().optional().default(false),
   belongsTo: z.string().optional().nullable(),
   lastSent: z.string().optional().nullable(),
+  hasWarnings: z.boolean().optional().default(false),
+  warningNumber: z.number().optional().nullable(),
+  warningInterval: z.string().optional().nullable(),
+  warningIntervalNumber: z.number().optional().nullable(),
 });
 
 export type CreateReminderDto = z.infer<typeof CreateReminderSchema>;

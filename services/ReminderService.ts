@@ -50,6 +50,10 @@ export class ReminderService {
         return reminderWithChildren;
     }
 
+    async deleteReminder(reminderId: string) {
+        return await this.reminderRepository.delete(reminderId);
+    }
+
     // async registerUser(user: CreateUserDto) {
     //     //check if user already exists
     //     const existingUser = await this.getUserByEmail(user.email);

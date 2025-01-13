@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import {CreateReminderSchema, UpdateReminderSchema } from "@/lib/validations/reminder";
 import { z } from "zod";
 import { getCurrentUser } from "@/lib/session";
+import { auth } from "@/lib/auth";
+import { requireAuth } from "middlewares/authMiddleware";
+import { NextAuthRequest } from "next-auth/lib";
 
 export async function PUT(request: NextRequest) {
   try {
@@ -30,3 +33,24 @@ export async function PUT(request: NextRequest) {
     return new Response(error.message, { status: 500 });
   }
 }
+
+export const DELETE = auth(
+  requireAuth(async (req: NextAuthRequest) => {
+    try {
+      const url = new URL(req.url);
+      const id = url.pathname.split("/").pop();
+
+      if (!id || typeof id !== "string") {
+        return new Response("Reminder ID is required", { status: 400 });
+      }
+
+      const reminderService = ReminderService.getInstance();
+      await reminderService.deleteReminder(id);
+
+      return new Response("Reminder deleted", { status: 200 });
+    } catch (error: any) {
+        console.error(error);
+        return new Response(error.message, { status: 500 });
+    }
+  })
+);

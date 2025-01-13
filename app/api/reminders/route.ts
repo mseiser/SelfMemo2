@@ -41,6 +41,10 @@ export const POST = auth(
         isDisabled: requestBody.isDisabled,
         belongsTo: requestBody.belongsTo,
         lastSent: requestBody.lastSent,
+        hasWarnings: requestBody.hasWarnings,
+        warningNumber: requestBody.warningNumber,
+        warningInterval: requestBody.warningInterval,
+        warningIntervalNumber: requestBody.warningIntervalNumber,
       });
 
       const reminderService = ReminderService.getInstance();

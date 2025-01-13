@@ -44,13 +44,13 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
         });
     }
 
-    // async delete(id: string): Promise<User> {
-    //     return await this.prisma.user.delete({
-    //         where: {
-    //             id: id,
-    //         },
-    //     });
-    // }
+    async delete(id: string): Promise<Reminder> {
+        return await this.prisma.reminder.delete({
+            where: {
+                id: id,
+            },
+        });
+    }
 
     // async getById(id: string): Promise<User | null> {
     //     return await this.prisma.user.findUnique({
