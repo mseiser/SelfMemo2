@@ -52,5 +52,5 @@ export const DELETE = auth(
         console.error(error);
         return new Response(error.message, { status: 500 });
     }
-  })
+  }) as any
 );
