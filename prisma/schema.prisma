@@ -71,6 +71,11 @@ model Reminder {
   config      String // contains json, but json datatype not supported in sqlite
   isDisabled  Boolean
   belongsTo   String? @map("reminder_id")
+  lastSent   String? // contains unix-timestamp of last time the reminder was sent
+  hasWarnings Boolean
+  warningNumber Int? @default(0)
+  warningInterval String?
+  warningIntervalNumber Int?
 
   user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   parentReminder Reminder?  @relation("ParentChild", fields: [belongsTo], references: [id], onDelete: Cascade)
