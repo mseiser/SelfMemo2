@@ -50,7 +50,7 @@ export class NotificationService {
     console.log(`Triggering reminder: ${reminder.id}`);
 
     var smtpTransport = nodemailer.createTransport({
-        host: "mail.smtp2go.com",
+        host: process.env.SMTP_HOST,
         port: 465,
         secure: true,
         auth: {
@@ -63,7 +63,7 @@ export class NotificationService {
     const user = await userService.getUserById(reminder.userId);
     smtpTransport.sendMail(
       {
-        from: "dev@weisl.cc",
+        from: process.env.SMTP_MAIL,
         to: user?.email,
         subject: "SelfMemo Reminder: " + reminder.name,
         text: reminder.description,
