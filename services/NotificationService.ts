@@ -46,7 +46,44 @@ export class NotificationService {
     }
   }
 
-  async sendNotification(reminder: Reminder) {
+  async generateWarningReminders(
+    timestamp: number,
+    warnings: number | null,
+    intervalCount: number |null,
+    intervalUnit: string | null
+  ) {
+    const intervalMap = {
+      minute: 60 * 1000,
+      hour: 60 * 60 * 1000,
+      day: 24 * 60 * 60 * 1000,
+      week: 7 * 24 * 60 * 60 * 1000,
+      month: 30 * 24 * 60 * 60 * 1000, // approximation
+      year: 365 * 24 * 60 * 60 * 1000 // approximation
+    };
+
+    if(warnings === null || intervalCount === null || intervalUnit === null) {
+      throw new Error("Invalid warning configuration.");
+    }
+  
+    if (!(intervalUnit in intervalMap)) {
+      throw new Error("Invalid interval unit. Must be one of: minutes, hours, days, weeks, months, years.");
+    }
+  
+    const intervalMilliseconds = intervalMap[intervalUnit as keyof typeof intervalMap];
+    const reminders = [];
+  
+    for (let i = 1; i <= warnings; i++) {
+      const reminderTimestamp = (timestamp * 1000) - (i * intervalCount * intervalMilliseconds);
+  
+      if (reminderTimestamp > Date.now()) {
+        reminders.push(reminderTimestamp);
+      }
+    }
+  
+    return reminders.reverse();
+  }
+
+  async sendNotification(reminder: Reminder, isWarning: boolean = false) {
     console.log(`Triggering reminder: ${reminder.id}`);
 
     var smtpTransport = nodemailer.createTransport({
@@ -59,13 +96,18 @@ export class NotificationService {
         },
     });
 
+    let subject = "SelfMemo Reminder: " + reminder.name;
+    if(isWarning) {
+      subject = "SelfMemo Warning-Reminder: " + reminder.name;
+    }
+
     const userService = UserService.getInstance();
     const user = await userService.getUserById(reminder.userId);
     smtpTransport.sendMail(
       {
         from: process.env.SMTP_MAIL,
         to: user?.email,
-        subject: "SelfMemo Reminder: " + reminder.name,
+        subject: subject,
         text: reminder.description,
       },
       function (error, response) {
@@ -88,8 +130,29 @@ export class NotificationService {
       console.log('Misconfigured reminder, skipping...');
       return;
     }
-
     const timestamp = config.timestamp;
+
+    if(reminder.hasWarnings) {
+      const reminders = await this.generateWarningReminders(
+        timestamp,
+        reminder.warningNumber,
+        reminder.warningIntervalNumber,
+        reminder.warningInterval
+      );
+
+      reminders.forEach(async (reminderTimestamp) => {
+        if(
+          isCurrentYear(reminderTimestamp) &&
+          isCurrentMonth(reminderTimestamp) &&
+          isCurrentMonth(reminderTimestamp) &&
+          isCurrentDay(reminderTimestamp) &&
+          isCurrentHour(reminderTimestamp) &&
+          isCurrentMinute(reminderTimestamp)
+        ) {
+          this.sendNotification(reminder, true);
+        }
+      });
+    }
 
     if(
       !isCurrentYear(timestamp) ||
