@@ -1,10 +1,7 @@
 import { prisma } from "@/lib/db";
 import { CreateReminderDto, UpdateReminderDto } from "@/lib/validations/reminder";
-import { Reminder } from "@prisma/client";
 import IReminderRepository from "repositories/IReminderRepository";
 import { ReminderRepository } from "repositories/ReminderRepository";
-import nodemailer from 'nodemailer';
-import { UserService } from "./UserService";
 
 export class ReminderService {
     private static instance: ReminderService;
@@ -30,6 +27,10 @@ export class ReminderService {
         return await this.reminderRepository.update(reminder);
     }
 
+    async updateReminderLastSent(reminderId: string, timestamp: number) {
+        return await this.reminderRepository.updateLastSent(reminderId, timestamp);
+    }
+
     async getAll() {
         return await this.reminderRepository.getAll();
     }
@@ -49,36 +50,8 @@ export class ReminderService {
         return reminderWithChildren;
     }
 
-    async triggerReminder(reminder: Reminder) {
-        console.log(`Triggering reminder: ${reminder.id}`);
-
-        var smtpTransport = nodemailer.createTransport({
-            host: "mail.smtp2go.com",
-            port: 465,
-            secure: true,
-            auth: {
-              user: process.env.SMTP_USER,
-              pass: process.env.SMTP_PASS,
-            },
-        });
-
-        const userService = UserService.getInstance();
-        const user = await userService.getUserById(reminder.userId);
-          
-        smtpTransport.sendMail({
-            from: "dev@weisl.cc",
-            to: user?.email,
-            subject: "SelfMemo Reminder: " + reminder.name,
-            text: reminder.description,
-        },
-            function (error, response) {
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log("Message sent: " + response);
-                }
-            }
-        );
+    async deleteReminder(reminderId: string) {
+        return await this.reminderRepository.delete(reminderId);
     }
 
     // async registerUser(user: CreateUserDto) {
