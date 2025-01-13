@@ -25,6 +25,17 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
         });
     }
 
+    async updateLastSent(reminderId: string, timestamp: number): Promise<Reminder> {
+        return await this.prisma.reminder.update({
+            where: {
+                id: reminderId,
+            },
+            data: {
+                lastSent: timestamp.toString(),
+            },
+        });
+    }
+
     async getAllByUserId(userId: string): Promise<Reminder[]> {
         return await this.prisma.reminder.findMany({
             where: {

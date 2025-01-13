@@ -16,6 +16,7 @@ type ReminderFormDataType = {
   config: string;
   isDisabled: boolean;
   belongsTo: string | null;
+  lastSent: string | null;
 };
 
 interface ReminderFormProps {
@@ -31,6 +32,7 @@ const defaultReminderValues: ReminderFormDataType = {
   config: '{}',
   isDisabled: false,
   belongsTo: null,
+  lastSent: null,
 };
 
 export default function ReminderForm({ reminder }: ReminderFormProps) {
@@ -529,7 +531,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
             <label htmlFor="yearlyType1" className="ml-3 text-sm/6 font-medium text-gray-900 flex items-center">
               <span>on the</span>
               <input onChange={handleYearlyDayChange} value={yearlyDay} type="number" min="1" max="31" id="yearlyDay" name="yearlyDay" className={`w-[50px] p-2 mx-2 border rounded-lg ${formErrors.name ? 'border-red-500' : 'border-gray-300'}`} />
-              <span>day of every month.</span>
+              <span>day of the month.</span>
             </label>
           </div>
           <div className="flex items-center">
@@ -571,7 +573,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
                 <option value="saturday">Saturday</option>
                 <option value="sunday">Sunday</option>
               </select>
-              <span>of every month</span>
+              <span>of the month</span>
             </label>
           </div>
           at

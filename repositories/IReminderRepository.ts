@@ -5,6 +5,7 @@ export default interface IReminderRepository {
     getAll(): Promise<Reminder[]>;
     create(entity: CreateReminderDto): Promise<Reminder>;
     update(entity: UpdateReminderDto): Promise<Reminder>;
+    updateLastSent(reminderId: string, timestamp: number): Promise<Reminder>;
     getAllByUserId(userId: string): Promise<Reminder[]>;
     // delete(id: string): Promise<User>;
     // getById(id: string): Promise<User | null>;

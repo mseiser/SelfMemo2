@@ -27,6 +27,10 @@ export class ReminderService {
         return await this.reminderRepository.update(reminder);
     }
 
+    async updateReminderLastSent(reminderId: string, timestamp: number) {
+        return await this.reminderRepository.updateLastSent(reminderId, timestamp);
+    }
+
     async getAll() {
         return await this.reminderRepository.getAll();
     }

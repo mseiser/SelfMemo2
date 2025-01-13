@@ -40,6 +40,7 @@ export const POST = auth(
         config: requestBody.config,
         isDisabled: requestBody.isDisabled,
         belongsTo: requestBody.belongsTo,
+        lastSent: requestBody.lastSent,
       });
 
       const reminderService = ReminderService.getInstance();
