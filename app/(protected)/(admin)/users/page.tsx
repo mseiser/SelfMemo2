@@ -34,6 +34,8 @@ export default function UsersPage() {
   const { data, error, isLoading } = useApiSwr<User[]>(url);
 
   const [email, setEmail] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [errors, setErrors] = useState<{ email?: string; password?: string; role?: string }>({});
@@ -69,7 +71,7 @@ export default function UsersPage() {
       const response = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, role, password }),
+        body: JSON.stringify({ email, role, password, firstName, lastName }),
       });
 
       if (!response.ok) {
@@ -108,6 +110,24 @@ export default function UsersPage() {
                 </SheetDescription>
               </SheetHeader>
               <div className="space-y-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium">First Name:</label>
+                  <Input
+                    value={firstName}
+                    type='text'
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Enter users firstname"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">Last Name:</label>
+                  <Input
+                    value={lastName}
+                    type='text'
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Enter users surname"
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium">Email:</label>
                   <Input
@@ -163,14 +183,17 @@ export default function UsersPage() {
           data={data || []}
           entity="users"
           mutateKey={url}
-          fields={["id", "email", "role"]}
+          fields={["id", "email", "firstName", "lastName", "role"]}
           combineFieldsCallbacks={{}}
           fieldFormatter={{
             role: (role) => role.charAt(0).toUpperCase() + role.slice(1),
           }}
-          labelFormatter={{}}
+          labelFormatter={{
+            firstName: () => "First Name",
+            lastName: () => "Last Name",
+          }}
           filters={false}
-          showEditButton={false}
+          showEditButton={true}
           entityButtonText="Edit"
         />
 

@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import { BaseRepository } from "./BaseRepository";
 import IUserRepository from "./IUserRepository";
-import { CreateUserDto } from "@/lib/validations/user";
+import { CreateUserDto, UpdateUserDto } from "@/lib/validations/user";
 
 export class UserRepository extends BaseRepository implements IUserRepository {
 
@@ -11,7 +11,7 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         });
     }
 
-    async update(user: User): Promise<User> {
+    async update(user: UpdateUserDto): Promise<User> {
         return await this.prisma.user.update({
             where: {
                 id: user.id,
