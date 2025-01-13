@@ -26,12 +26,14 @@ export const POST = auth(
         requireRole("admin", async (req: NextAuthRequest) => {
             try {
 
-                const { email, password, role } = await req.json();
+                const { email, password, role, firstName, lastName } = await req.json();
 
                 const createUserDto: CreateUserDto = CreateUserSchema.parse({
                     email,
                     password,
-                    role: role
+                    role: role,
+                    firstName,
+                    lastName
                 });
 
                 const userService = UserService.getInstance();

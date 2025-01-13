@@ -65,9 +65,9 @@ function DesktopNav({ isAdmin }: { isAdmin: boolean }) {
           <span className="sr-only">Reminders</span>
         </Link>
 
-        <NavItem href="/" label="Dashboard">
+        {/*<NavItem href="/" label="Dashboard">
           <Home className="h-5 w-5" />
-        </NavItem>
+        </NavItem>*/}
 
         {isAdmin ? <NavItem href="/users" label="Users">
           <Users2 className="h-5 w-5" />
@@ -115,13 +115,13 @@ function MobileNav({ isAdmin }: { isAdmin: boolean }) {
             <span className="sr-only">Reminders</span>
           </Link>
 
-          <Link
+          {/*<Link
             href="/"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <Home className="h-5 w-5" />
             Dashboard
-          </Link>
+          </Link>*/}
 
           {isAdmin ? <Link
             href="/users"

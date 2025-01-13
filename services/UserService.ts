@@ -1,4 +1,4 @@
-import { CreateUserDto } from "@/lib/validations/user";
+import { CreateUserDto, UpdateUserDto } from "@/lib/validations/user";
 import IUserRepository from "repositories/IUserRepository";
 import { UserRepository } from "repositories/UserRepository";
 import bcrypt from "bcryptjs";
@@ -37,7 +37,6 @@ export class UserService {
             password: hashedPassword, // Use hashed password
         };
 
-
         return await this.userRepository.create(newUser);
     }
 
@@ -69,6 +68,10 @@ export class UserService {
         }
     }
 
+    async updateUser(user: UpdateUserDto) {
+        return await this.userRepository.update(user);
+    }
+
     async createDefaultAdminUser() {
 
         if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
@@ -76,6 +79,8 @@ export class UserService {
         }
 
         const adminUser: CreateUserDto = {
+            firstName: 'Admin',
+            lastName: 'User',
             email: process.env.ADMIN_EMAIL,
             password: process.env.ADMIN_PASSWORD,
             role: 'admin',
