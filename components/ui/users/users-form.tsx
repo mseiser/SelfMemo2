@@ -49,13 +49,7 @@ export default function UserForm({ user }: UserFormProps) {
     const { name, value } = e.target;
     setUserFormData((prev) => ({
       ...prev,
-      [name]: name === 'timestamp' || name === 'warningNumber' || name === 'warningIntervalNumber' ? Number(value) : value,
-    }));
-  };
-  const handleWarningCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserFormData((prev) => ({
-      ...prev,
-      hasWarnings: event.target.checked,
+      [name]: value,
     }));
   };
 

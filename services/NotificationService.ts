@@ -49,7 +49,7 @@ export class NotificationService {
   async generateWarningReminders(
     timestamp: number,
     warnings: number | null,
-    intervalCount: number |null,
+    intervalCount: number | null,
     intervalUnit: string | null
   ) {
     const intervalMap = {
@@ -120,8 +120,10 @@ export class NotificationService {
     );
 
     // Update lastSent field
-    const reminderService = ReminderService.getInstance();
-    reminderService.updateReminderLastSent(reminder.id, (new Date().getTime() / 1000));
+    if(!isWarning) {
+      const reminderService = ReminderService.getInstance();
+      reminderService.updateReminderLastSent(reminder.id, Math.round((new Date().getTime() / 1000)));
+    }
   }
 
   async checkOneTimeReminder(reminder: Reminder) {
