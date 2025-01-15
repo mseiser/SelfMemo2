@@ -101,7 +101,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
     const { name, value } = e.target;
     setReminderFormData((prev) => ({
       ...prev,
-      [name]: name === 'timestamp' || name === 'warningNumber' || name === 'warningIntervalNumber' ? Number(value) : value,
+      [name]: (name === 'timestamp' || name === 'warningNumber' || name === 'warningIntervalNumber') ? Number(value) : value,
     }));
   };
   const handleWarningCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
