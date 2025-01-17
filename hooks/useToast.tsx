@@ -4,7 +4,7 @@ import { CircleX, CircleCheck } from "lucide-react";
 
 export function useToast() {
   const success = (title: string, message: string) => {
-    toast((t) => {
+    toast(() => {
       return (
         <Toast
           title={title}
@@ -21,7 +21,7 @@ export function useToast() {
   };
 
   const error = (title: string, message: string) => {
-    toast((t) => {
+    toast(() => {
       return (
         <Toast
           title={title}

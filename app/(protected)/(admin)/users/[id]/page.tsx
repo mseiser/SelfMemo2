@@ -8,10 +8,10 @@ import UserForm from '@/components/ui/users/users-form';
 import { UserService } from 'services/UserService';
 
 type Params = Promise<{
-      id: string
+    id: string
 }>;
 
-export default async function RemindersEditPage({ params }: {params: Params}) {
+export default async function RemindersEditPage({ params }: { params: Params }) {
     const userEditParams = await params;
     const userId = userEditParams.id;
 
@@ -23,7 +23,7 @@ export default async function RemindersEditPage({ params }: {params: Params}) {
                 <CardTitle>Edit user</CardTitle>
             </CardHeader>
             <CardContent>
-                <UserForm user={user} />
+                <UserForm user={user ?? undefined} />
             </CardContent>
         </Card>
     );

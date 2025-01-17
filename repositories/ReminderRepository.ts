@@ -5,14 +5,16 @@ import { CreateReminderDto, UpdateReminderDto } from "@/lib/validations/reminder
 
 export class ReminderRepository extends BaseRepository implements IReminderRepository {
     async create(reminder: CreateReminderDto): Promise<Reminder> {
+
         return await this.prisma.reminder.create({
+            // @ts-ignore
             data: reminder,
         });
     }
 
     async getAll(): Promise<Reminder[]> {
         return await this.prisma.reminder.findMany(
-            
+
         );
     }
 
@@ -60,7 +62,7 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
     //     });
     // }
 
-   
+
 
     // async getWhere(where: any): Promise<User[]> {
     //     return await this.prisma.user.findMany({

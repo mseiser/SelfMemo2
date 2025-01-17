@@ -1,50 +1,63 @@
-import { NextAuthRequest } from "next-auth/lib";
-import { auth } from "@/lib/auth";
 import { UserService } from "services/UserService";
-import { requireAuth, requireRole } from "middlewares/authMiddleware";
 import { CreateUserDto, CreateUserSchema } from "@/lib/validations/user";
+import { NextRequest, NextResponse } from "next/server";
+import { getCurrentUser } from "@/lib/session";
+import { z } from "zod";
 
 
-export const GET = auth(
-    requireAuth(
-        requireRole("admin", async (req: NextAuthRequest) => {
-            try {
-                const userService = UserService.getInstance();
-                const users = await userService.getAllUsers();
+export const GET = async (request: NextRequest) => {
+    try {
+        const user = await getCurrentUser();
+        if (!user || user.role !== "admin") {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
 
-                return new Response(JSON.stringify(users), { status: 200 });
-            } catch (error: any) {
-                console.error(error);
-                return new Response(error.message, { status: 500 });
-            }
-        })
-    )
-);
+        const userService = UserService.getInstance();
+        const users = await userService.getAllUsers();
 
-export const POST = auth(
-    requireAuth(
-        requireRole("admin", async (req: NextAuthRequest) => {
-            try {
+        return new NextResponse(JSON.stringify(users), { status: 200 });
+    } catch (error: any) {
+        console.error(error);
+        return new NextResponse(
+            JSON.stringify({ message: error.message || "An error occurred" }),
+            { status: 500 }
+        );
+    }
+}
 
-                const { email, password, role, firstName, lastName } = await req.json();
+export const POST = async (request: NextRequest) => {
+    try {
+        const user = await getCurrentUser();
+        if (!user || user.role !== "admin") {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
 
-                const createUserDto: CreateUserDto = CreateUserSchema.parse({
-                    email,
-                    password,
-                    role: role,
-                    firstName,
-                    lastName
-                });
+        const requestBody = await request.json();
+        const { email, password, role, firstName, lastName } = requestBody;
 
-                const userService = UserService.getInstance();
+        const createUserDto: CreateUserDto = CreateUserSchema.parse({
+            email,
+            password,
+            role,
+            firstName,
+            lastName,
+        });
 
-                const user = await userService.registerUser(createUserDto);
+        const userService = UserService.getInstance();
+        const newUser = await userService.registerUser(createUserDto);
 
-                return new Response(JSON.stringify(user), { status: 201 });
-            } catch (error: any) {
-                console.error(error);
-                return new Response(error.message, { status: 500 });
-            }
-        })
-    )
-);
+        return new NextResponse(JSON.stringify(newUser), { status: 201 });
+    } catch (error: any) {
+        console.error(error);
+        if (error instanceof z.ZodError) {
+            return new NextResponse(
+                JSON.stringify({ errors: error.errors }),
+                { status: 400 }
+            );
+        }
+        return new NextResponse(
+            JSON.stringify({ message: error.message || "An error occurred" }),
+            { status: 500 }
+        );
+    }
+}

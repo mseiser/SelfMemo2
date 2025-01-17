@@ -1,64 +1,80 @@
-
-import { auth } from "@/lib/auth";
-import { requireAuth, requireRole } from "middlewares/authMiddleware";
 import { UserService } from "services/UserService";
-import { NextAuthRequest } from "next-auth/lib";
-import { CreateUserDto, UpdateUserDto, UpdateUserSchema } from "@/lib/validations/user";
+import { UpdateUserDto, UpdateUserSchema } from "@/lib/validations/user";
+import { getCurrentUser } from "@/lib/session";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
-export const DELETE = auth(
-    requireAuth(
-        requireRole("admin", async (req: NextAuthRequest) => {
-            try {
-                const url = new URL(req.url);
-                const id = url.pathname.split("/").pop();
+export const DELETE = async (request: NextRequest) => {
+    try {
+        const user = await getCurrentUser();
+        if (!user || user.role !== "admin") {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
 
-                if (!id || typeof id !== "string") {
-                    return new Response("User ID is required", { status: 400 });
-                }
+        // Extract user ID from the URL
+        const url = new URL(request.url);
+        const id = url.pathname.split("/").pop();
 
-                const userService = UserService.getInstance();
-                await userService.deleteUser(id);
+        if (!id || typeof id !== "string") {
+            return new NextResponse("User ID is required", { status: 400 });
+        }
 
-                return new Response("User deleted", { status: 200 });
-            } catch (error: any) {
-                console.error(error);
-                return new Response(error.message, { status: 500 });
-            }
-        })
-    )
-);
+        const userService = UserService.getInstance();
+        await userService.deleteUser(id);
 
-export const PUT = auth(
-    requireAuth(
-        requireRole("admin", async (req: NextAuthRequest) => {
-            try {
-                const url = new URL(req.url);
-                const id = url.pathname.split("/").pop();
+        return new NextResponse("User deleted", { status: 200 });
+    } catch (error: any) {
+        console.error(error);
+        return new NextResponse(
+            JSON.stringify({ message: error.message || "An error occurred" }),
+            { status: 500 }
+        );
+    }
+}
 
-                if (!id || typeof id !== "string") {
-                    return new Response("User ID is required", { status: 400 });
-                }
+export const PUT = async (request: NextRequest) => {
+    try {
+        const user = await getCurrentUser();
+        if (!user || user.role !== "admin") {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
 
-                const { email, password, role, firstName, lastName } = await req.json();
+        // Extract user ID from the URL
+        const url = new URL(request.url);
+        const id = url.pathname.split("/").pop();
 
-                const updateUserDto: UpdateUserDto = UpdateUserSchema.parse({
-                    id,
-                    email,
-                    password,
-                    role: role,
-                    firstName,
-                    lastName
-                });
+        if (!id || typeof id !== "string") {
+            return new NextResponse("User ID is required", { status: 400 });
+        }
 
-                const userService = UserService.getInstance();
+        // Parse request body
+        const requestBody = await request.json();
+        const { email, password, role, firstName, lastName } = requestBody;
 
-                const user = await userService.updateUser(updateUserDto);
+        const updateUserDto: UpdateUserDto = UpdateUserSchema.parse({
+            id,
+            email,
+            password,
+            role,
+            firstName,
+            lastName,
+        });
 
-                return new Response(JSON.stringify(user), { status: 200 });
-            } catch (error: any) {
-                console.error(error);
-                return new Response(error.message, { status: 500 });
-            }
-        })
-    )
-);
+        const userService = UserService.getInstance();
+        const updatedUser = await userService.updateUser(updateUserDto);
+
+        return new NextResponse(JSON.stringify(updatedUser), { status: 200 });
+    } catch (error: any) {
+        console.error(error);
+        if (error instanceof z.ZodError) {
+            return new NextResponse(
+                JSON.stringify({ errors: error.errors }),
+                { status: 400 }
+            );
+        }
+        return new NextResponse(
+            JSON.stringify({ message: error.message || "An error occurred" }),
+            { status: 500 }
+        );
+    }
+}

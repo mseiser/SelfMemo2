@@ -75,7 +75,8 @@ export default function UsersPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create user");
+        const errorData = await response.json(); // Parse the response body
+        throw new Error(errorData.message || `Failed to create the user. Status: ${response.status}`);
       }
 
       toast.success("User created!", "You have successfully created a new user.");
@@ -84,9 +85,8 @@ export default function UsersPage() {
       setPassword("");
       mutate(url);
 
-    } catch (error) {
-      console.error("Error creating user:", error);
-      toast.error("Error creating user", "An error occurred while creating the user.");
+    } catch (error: any) {
+      toast.error("Error creating user", error.message);
     }
   };
 

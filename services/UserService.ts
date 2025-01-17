@@ -45,7 +45,30 @@ export class UserService {
     }
 
     async deleteUser(userID: string) {
+        //check if last admin user
+
+        const user = await this.getUserById(userID);
+
+        if(!user) {
+            throw new Error('User not found');
+        }
+
+        if(user.role !== 'admin') return await this.userRepository.delete(userID);
+    
+        const isLastAdminUser = await this.checkIfLastAdminUser();
+
+        if(isLastAdminUser) {
+            throw new Error('Cannot delete last admin user');
+        }
+        
         return await this.userRepository.delete(userID);
+    }
+
+    async checkIfLastAdminUser() {
+        const users = await this.userRepository.getAll();
+        const adminUsers = users.filter((user) => user.role === 'admin');
+
+        return adminUsers.length === 1;
     }
 
     async getUserById(userID: string) {
