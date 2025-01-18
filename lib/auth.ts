@@ -19,6 +19,7 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
+  trustHost: true,
   session: {
     strategy: 'jwt',
   },
@@ -38,7 +39,8 @@ export const {
           throw new Error("Email and password are required.");
         }
 
-        const { email, password } = credentials;
+        const email = credentials.email as string;
+        const password = credentials.password as string;
 
         const user = await prisma.user.findUnique({
           where: {
@@ -85,6 +87,7 @@ export const {
       if (user) {
         token.sub = user.id;
         token.email = user.email;
+        // @ts-ignore
         token.role = user.role;
         token.name = user.name;
         token.picture = user.image;

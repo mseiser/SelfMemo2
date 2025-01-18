@@ -10,6 +10,6 @@ export async function GET() {
     return new Response("Admin user created", { status: 201 });
   } catch (error: any) {
     console.error(error);
-    return new Response(error.message, { status: 500 });
+    return new Response(JSON.stringify({message: error.message}), { status: 500 });
   }
 }

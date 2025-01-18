@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Pagination from "./Pagination";
 import { useSWRConfig } from "swr";
 import NoSearchResults from "./NoSearchResults";
+import { useToast } from "hooks/useToast";
 interface INFDynamicList {
   data: any[];
   fields: string[];
@@ -55,8 +56,7 @@ const DynamicList: FC<INFDynamicList> = ({
   const router = useRouter();
   const path = usePathname();
   const { mutate } = useSWRConfig();
-
-  //TODO: make this function more generic
+  const toast = useToast();
   const bulkDelete = async (entity: string) => {
     if (!entity) return;
 
@@ -70,7 +70,8 @@ const DynamicList: FC<INFDynamicList> = ({
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to delete ${object.id}: ${response.statusText}`);
+          const errorData = await response.json(); // Parse the response body
+          throw new Error(errorData.message || `Failed to delete ${object.id}: ${response.statusText}`);
         }
 
         return response;
@@ -83,8 +84,8 @@ const DynamicList: FC<INFDynamicList> = ({
       }
 
       setSelectedData([]);
-    } catch (error) {
-      console.error("Error in bulkDelete:", error);
+    } catch (error: any) {
+      toast.error('Error while deleting items', `${error.message || "Unknown error"}`);
     }
   };
 

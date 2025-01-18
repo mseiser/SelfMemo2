@@ -7,7 +7,7 @@ import { ScheduledReminderService } from "services/ScheduledReminderService";
 export class ReminderRepository extends BaseRepository implements IReminderRepository {
     async getAll(): Promise<Reminder[]> {
         return await this.prisma.reminder.findMany(
-            
+
         );
     }
 
@@ -21,6 +21,7 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
 
     async create(reminder: CreateReminderDto): Promise<Reminder> {
         const newReminder = await this.prisma.reminder.create({
+            // @ts-ignore
             data: {
                 ...reminder,
                 description: reminder.description ?? "",
@@ -81,7 +82,7 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
     //     });
     // }
 
-   
+
 
     // async getWhere(where: any): Promise<User[]> {
     //     return await this.prisma.user.findMany({

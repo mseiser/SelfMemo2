@@ -24,6 +24,6 @@ export async function POST(request: NextRequest) {
         if (error instanceof z.ZodError) {
             return new Response(JSON.stringify({ errors: error.errors }), { status: 400 });
         }
-        return new Response(error.message, { status: 500 });
+        return new Response(JSON.stringify({message: error.message}), { status: 500 });
     }
 }
