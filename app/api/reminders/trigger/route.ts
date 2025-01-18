@@ -2,7 +2,7 @@ import { ReminderService } from "services/ReminderService";
 import { NextRequest } from "next/server";
 import { isTimeSetToCurrentTime, isTimestampSetToCurrentMinute, isTodaySetToTrue } from "@/lib/utils";
 import { NotificationService } from "services/NotificationService";
-import { ScheduledReminderService, ScheduledReminderService } from "services/ScheduledReminderService";
+import { ScheduledReminderService } from "services/ScheduledReminderService";
 
 export async function POST(request: NextRequest) {
   try {
