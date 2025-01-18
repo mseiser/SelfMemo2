@@ -1,8 +1,9 @@
-import { Reminder } from "@prisma/client";
+import { Reminder, ScheduledReminder } from "@prisma/client";
 import nodemailer from 'nodemailer';
 import { UserService } from "./UserService";
 import { addDaysToTimestamp, isCurrentDay, isCurrentHour, isCurrentMinute, isCurrentMonth, isCurrentYear, isDayNumberToday, isNowGreaterThanDate, isNthWeekdayOfMonth, isTimeSetToCurrentTime, isTimestampSetToCurrentMinute, isTodaySetToTrue, isTodayWeekDay } from "@/lib/utils";
 import { ReminderService } from "./ReminderService";
+import { ScheduledReminderService } from "./ScheduledReminderService";
 
 export class NotificationService {
   private static instance: NotificationService;
@@ -17,33 +18,53 @@ export class NotificationService {
     return NotificationService.instance;
   }
 
-  async checkIfReminderShouldBeNotified(reminder: Reminder) {
-    if(reminder.isDisabled) {
-      return;
+  async checkIfReminderShouldBeNotified(date: Date, scheduledReminder: ScheduledReminder) {
+    const scheduledReminderDate = new Date(scheduledReminder.timestamp * 1000);
+
+    if(
+      date.getFullYear() === scheduledReminderDate.getFullYear() &&
+      date.getMonth() === scheduledReminderDate.getMonth() &&
+      date.getDate() === scheduledReminderDate.getDate() &&
+      date.getHours() === scheduledReminderDate.getHours() &&
+      date.getMinutes() === scheduledReminderDate.getMinutes()
+    ) {
+      const reminder = await ReminderService.getInstance().getById(scheduledReminder.reminderId);
+
+      if(!reminder) {
+        console.log('Reminder not found, skipping...');
+        return;
+      }
+
+      this.sendNotification(reminder, scheduledReminder.isWarning);
+      await ScheduledReminderService.getInstance().delete(scheduledReminder.id);
     }
 
-    switch(reminder.type) {
-      case 'one-time':
-        this.checkOneTimeReminder(reminder);
-        break;
-      case 'daily':
-        this.checkDailyReminder(reminder);
-        break;
-      case 'weekly':
-        this.checkWeeklyReminder(reminder);
-        break;
-      case 'n-weekly':
-        this.checkNWeeklyReminder(reminder);
-        break;
-      case 'monthly':
-        this.checkMonthlyReminder(reminder);
-        break;
-      case 'yearly':
-        this.checkYearlyReminder(reminder);
-        break;
-      default:
-        break;
-    }
+    // if(reminder.isDisabled) {
+    //   return;
+    // }
+
+    // switch(reminder.type) {
+    //   case 'one-time':
+    //     this.checkOneTimeReminder(reminder);
+    //     break;
+    //   case 'daily':
+    //     this.checkDailyReminder(reminder);
+    //     break;
+    //   case 'weekly':
+    //     this.checkWeeklyReminder(reminder);
+    //     break;
+    //   case 'n-weekly':
+    //     this.checkNWeeklyReminder(reminder);
+    //     break;
+    //   case 'monthly':
+    //     this.checkMonthlyReminder(reminder);
+    //     break;
+    //   case 'yearly':
+    //     this.checkYearlyReminder(reminder);
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
 
   async generateWarningReminders(

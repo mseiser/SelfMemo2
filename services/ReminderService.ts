@@ -35,6 +35,10 @@ export class ReminderService {
         return await this.reminderRepository.getAll();
     }
 
+    async getById(reminderId: string) {
+        return await this.reminderRepository.getById(reminderId);
+    }
+
     async getAllByUserId(userId: string) {
         return await this.reminderRepository.getAllByUserId(userId);
     }

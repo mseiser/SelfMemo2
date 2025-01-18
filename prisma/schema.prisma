@@ -79,9 +79,21 @@ model Reminder {
   warningInterval       String?
   warningIntervalNumber Int?
 
-  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parentReminder Reminder?  @relation("ParentChild", fields: [belongsTo], references: [id], onDelete: Cascade)
-  childReminders Reminder[] @relation("ParentChild")
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentReminder    Reminder?           @relation("ParentChild", fields: [belongsTo], references: [id], onDelete: Cascade)
+  childReminders    Reminder[]          @relation("ParentChild")
+  ScheduledReminder ScheduledReminder[]
 
   @@map("reminders")
+}
+
+model ScheduledReminder {
+  id         String @id @default(cuid())
+  reminderId String @map("reminder_id")
+  timestamp  Int
+  isWarning Boolean
+
+  reminder Reminder @relation(fields: [reminderId], references: [id], onDelete: Cascade)
+
+  @@map("scheduledReminders")
 }

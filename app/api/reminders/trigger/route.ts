@@ -2,15 +2,22 @@ import { ReminderService } from "services/ReminderService";
 import { NextRequest } from "next/server";
 import { isTimeSetToCurrentTime, isTimestampSetToCurrentMinute, isTodaySetToTrue } from "@/lib/utils";
 import { NotificationService } from "services/NotificationService";
+import { ScheduledReminderService, ScheduledReminderService } from "services/ScheduledReminderService";
 
 export async function POST(request: NextRequest) {
   try {
     const notificationService = NotificationService.getInstance();
-    const reminderService = ReminderService.getInstance();
-    const reminders = await reminderService.getAll();
+    const scheduledReminderService = ScheduledReminderService.getInstance();
+    const scheduledReminders = await scheduledReminderService.getAll();
+    const reminders = await ReminderService.getInstance().getAll();
+    const now = new Date();
 
-    reminders.forEach((reminder) => {
-      notificationService.checkIfReminderShouldBeNotified(reminder);
+    scheduledReminders.forEach((scheduledReminder) => {
+      notificationService.checkIfReminderShouldBeNotified(now, scheduledReminder);
+    });
+
+    reminders.forEach(async (reminder) => {
+      await scheduledReminderService.createScheduledReminders(reminder);
     });
 
     return new Response("OK");

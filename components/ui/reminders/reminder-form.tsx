@@ -611,7 +611,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
 
       {/* Warnings */}
       <input
-        className=""
+        className="mb-4"
         type="checkbox"
         name="hasWarnings"
         id="hasWarnings"
@@ -624,23 +624,59 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
             Warning Reminders
           </label>
           Additionally, before sending the final reminder, send me
-          <input onChange={handleChange} value={reminderFormData.warningNumber ?? 1} id="warningNumber" name="warningNumber" type="number" className="mx-2 w-12 p-2 border rounded-lg" />
+          <input onChange={handleChange} value={reminderFormData.warningNumber ?? undefined} id="warningNumber" name="warningNumber" type="number" className="mx-2 w-12 p-2 border rounded-lg" />
           reminder(s)
-          <input onChange={handleChange} value={reminderFormData.warningIntervalNumber ?? 1} id="warningIntervalNumber" name="warningIntervalNumber" type="number" className="mx-2 w-12 p-2 border rounded-lg" />
+          <input onChange={handleChange} value={reminderFormData.warningIntervalNumber ?? undefined} id="warningIntervalNumber" name="warningIntervalNumber" type="number" className="mx-2 w-12 p-2 border rounded-lg" />
           <select
             id="warningInterval"
             name="warningInterval"
-            value={reminderFormData.warningInterval || 'minute'}
+            value={reminderFormData.warningInterval ?? undefined}
             onChange={handleChange}
             className={`mx-2 p-2 border rounded-lg ${
-              formErrors.type ? 'border-red-500' : 'border-gray-300'
+              formErrors.warningInterval ? 'border-red-500' : 'border-gray-300'
             }`}
           >
-            <option value="minute">Minutes</option>
-            <option value="hour">Hours</option>
-            <option value="week">Weeks</option>
-            <option value="month">Months</option>
-            <option value="year">Years</option>
+            <option></option>
+            {reminderFormData.type === 'one-time' && (
+              <>
+                <option value="minute">Minute(s)</option>
+                <option value="hour">Hour(s)</option>
+                <option value="day">Day(s)</option>
+                <option value="week">Week(s)</option>
+                <option value="month">Month(s)</option>
+                <option value="year">Year(s)</option>
+              </>
+            )}
+            {reminderFormData.type === 'daily' && (
+              <>
+                <option value="minute">Minute(s)</option>
+                <option value="hour">Hour(s)</option>
+              </>
+            )}
+            {(reminderFormData.type === 'weekly' || reminderFormData.type === 'n-weekly') && (
+              <>
+                <option value="minute">Minute(s)</option>
+                <option value="day">Day(s)</option>
+                <option value="hour">Hour(s)</option>
+              </>
+            )}
+            {reminderFormData.type === 'monthly' && (
+              <>
+                <option value="minute">Minute(s)</option>
+                <option value="hour">Hour(s)</option>
+                <option value="day">Day(s)</option>
+                <option value="week">Week(s)</option>
+              </>
+            )}
+            {reminderFormData.type === 'yearly' && (
+              <>
+                <option value="minute">Minute(s)</option>
+                <option value="hour">Hour(s)</option>
+                <option value="day">Day(s)</option>
+                <option value="week">Week(s)</option>
+                <option value="month">Month(s)</option>
+              </>
+            )}
           </select>
           apart.
         </div>
