@@ -7,8 +7,8 @@ generator client {
 
 //TODO make dynamic provider and db based on env
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
 }
 
 model Account {
