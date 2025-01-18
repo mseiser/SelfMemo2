@@ -144,7 +144,7 @@ export default function UsersPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     type='password'
-                    placeholder="Enter user role"
+                    placeholder="Enter user password"
                   />
                   {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                 </div>
