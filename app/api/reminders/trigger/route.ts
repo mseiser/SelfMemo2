@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { NotificationService } from "services/NotificationService";
 import { ScheduledReminderService } from "services/ScheduledReminderService";
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const notificationService = NotificationService.getInstance();
     const scheduledReminderService = ScheduledReminderService.getInstance();
