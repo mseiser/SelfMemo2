@@ -18,7 +18,6 @@ export const CreateReminderSchema = z.object({
     }
   }, { message: "Invalid JSON format" }),
   isDisabled: z.boolean().optional().default(false),
-  belongsTo: z.string().optional().nullable(),
   lastSent: z.string().optional().nullable(),
   hasWarnings: z.boolean().optional().default(false),
   warningNumber: z.number().optional().nullable(),
@@ -45,7 +44,6 @@ export const UpdateReminderSchema = z.object({
     }
   }, { message: "Invalid JSON format" }),
   isDisabled: z.boolean().optional().default(false),
-  belongsTo: z.string().optional().nullable(),
   lastSent: z.string().optional().nullable(),
   hasWarnings: z.boolean().optional().default(false),
   warningNumber: z.number().optional().nullable(),

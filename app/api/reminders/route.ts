@@ -53,7 +53,6 @@ export async function POST(request: NextRequest) {
       type: requestBody.type,
       config: requestBody.config,
       isDisabled: requestBody.isDisabled,
-      belongsTo: requestBody.belongsTo,
       lastSent: requestBody.lastSent,
       hasWarnings: requestBody.hasWarnings,
       warningNumber: requestBody.warningNumber,

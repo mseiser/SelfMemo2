@@ -15,7 +15,6 @@ type ReminderFormDataType = {
   type: string;
   config: string;
   isDisabled: boolean;
-  belongsTo: string | null;
   lastSent: string | null;
   hasWarnings: boolean;
   warningNumber: number | null;
@@ -35,7 +34,6 @@ const defaultReminderValues: ReminderFormDataType = {
   type: 'one-time',
   config: '{}',
   isDisabled: false,
-  belongsTo: null,
   lastSent: null,
   hasWarnings: false,
   warningNumber: null,

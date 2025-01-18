@@ -48,7 +48,6 @@ const ReminderList: React.FC = () => {
                 <div className="text-lg font-semibold">{reminder.name}</div>
                 <div className="text-gray-500">
                   <p>Type: {capitalizeWords(reminder.type)}</p>
-                  {reminder.belongsTo && <p>Parent Reminder ID: {reminder.belongsTo}</p>}
                 </div>
               </div>
               <div>
