@@ -15,7 +15,7 @@ export default async function RemindersEditPage({ params }: {params: Params}) {
     const reminderEditParams = await params;
     const reminderId = reminderEditParams.id;
 
-    const reminder = await ReminderService.getInstance().getSingleWithChildReminders(reminderId as string) || undefined;
+    const reminder = await ReminderService.getInstance().getById(reminderId as string) || undefined;
 
     return (
         <Card>

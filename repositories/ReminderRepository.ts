@@ -67,6 +67,10 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
     }
 
     async getAllByUserId(userId: string): Promise<Reminder[]> {
+        if(!userId) {
+            return [];
+        }
+
         return await this.prisma.reminder.findMany({
             where: {
                 userId: userId,

@@ -8,7 +8,6 @@ import {
     CardTitle
 } from '@/components/ui/card';
 import DynamicList from '@/components/ui/DynamicList';
-import ReminderList from '@/components/ui/reminders/reminder-list';
 import { Reminder } from '@prisma/client';
 import { useApiSwr } from 'hooks/useApiSwr';
 import { useToast } from 'hooks/useToast';
