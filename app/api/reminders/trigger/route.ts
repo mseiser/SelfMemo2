@@ -1,6 +1,5 @@
 import { ReminderService } from "services/ReminderService";
 import { NextRequest } from "next/server";
-import { isTimeSetToCurrentTime, isTimestampSetToCurrentMinute, isTodaySetToTrue } from "@/lib/utils";
 import { NotificationService } from "services/NotificationService";
 import { ScheduledReminderService } from "services/ScheduledReminderService";
 

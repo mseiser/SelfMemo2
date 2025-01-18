@@ -9,6 +9,4 @@ export default interface IReminderRepository {
     updateLastSent(reminderId: string, timestamp: number): Promise<Reminder>;
     getAllByUserId(userId: string): Promise<Reminder[]>;
     delete(id: string): Promise<Reminder>;
-    // getById(id: string): Promise<User | null>;
-    // getByEmail(email: string): Promise<User | null>;
 }

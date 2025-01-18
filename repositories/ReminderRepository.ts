@@ -73,32 +73,4 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
             },
         });
     }
-
-    // async getById(id: string): Promise<User | null> {
-    //     return await this.prisma.user.findUnique({
-    //         where: {
-    //             id: id
-    //         },
-    //     });
-    // }
-
-
-
-    // async getWhere(where: any): Promise<User[]> {
-    //     return await this.prisma.user.findMany({
-    //         where: where
-    //     });
-    // }
-
-    // async getByEmail(email: string): Promise<User | null> {
-    //     return await this.prisma.user.findUnique({
-    //         where: {
-    //             email: email,
-    //         },/*
-    //         select: {
-    //             name: true,
-    //             emailVerified: true,
-    //         },*/
-    //     });
-    // }
 }

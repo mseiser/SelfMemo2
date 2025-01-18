@@ -1,6 +1,5 @@
-import { CreateReminderDto, UpdateReminderDto } from "@/lib/validations/reminder";
 import { CreateScheduledReminderDto, UpdateScheduledReminderDto } from "@/lib/validations/scheduledReminder";
-import { Reminder, ScheduledReminder } from "@prisma/client";
+import { ScheduledReminder } from "@prisma/client";
 
 export default interface IScheduledReminderRepository {
     getAll(): Promise<ScheduledReminder[]>;

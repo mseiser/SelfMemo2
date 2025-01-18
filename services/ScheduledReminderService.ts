@@ -1,10 +1,6 @@
-import { prisma } from "@/lib/db";
-import { CreateReminderDto, UpdateReminderDto } from "@/lib/validations/reminder";
 import { CreateScheduledReminderDto, UpdateScheduledReminderDto } from "@/lib/validations/scheduledReminder";
 import { Reminder } from "@prisma/client";
-import IReminderRepository from "repositories/IReminderRepository";
 import IScheduledReminderRepository from "repositories/IScheduledReminderRepository";
-import { ReminderRepository } from "repositories/ReminderRepository";
 import { ScheduledReminderRepository } from "repositories/ScheduledReminderRepository";
 
 export class ScheduledReminderService {
