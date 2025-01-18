@@ -90,6 +90,15 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           setYearlyWeekDay(config.weekDay as string);
           setYearlyTime(config.time as string);
           break;
+        case 'n-yearly':
+          setNYearlyYears(config.years);
+          setNYearlyType(config.type as string);
+          setNYearlyMonth(config.month as string);
+          setNYearlyDay(config.day);
+          setNYearlyOrderNumber(config.orderNumber as string);
+          setNYearlyWeekDay(config.weekDay as string);
+          setNYearlyTime(config.time as string);
+          break;
         default:
           break;
       };
@@ -183,6 +192,14 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           newConfig.orderNumber = yearlyOrderNumber;
           newConfig.weekDay = yearlyWeekDay;
           newConfig.time = yearlyTime;
+        case 'n-yearly':
+          newConfig.years = nYearlyYears;
+          newConfig.type = nYearlyType;
+          newConfig.month = nYearlyMonth;
+          newConfig.day = nYearlyDay;
+          newConfig.orderNumber = nYearlyOrderNumber;
+          newConfig.weekDay = nYearlyWeekDay;
+          newConfig.time = nYearlyTime;
           break;
         default:
           break;
@@ -294,6 +311,36 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
     setYearlyTime(e.target.value);
   };
 
+  /** N-YEARLY PROPS */
+  const [nYearlyYears, setNYearlyYears] = useState<number>(1);
+  const handleNYearlyYearsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNYearlyYears(parseInt(e.target.value));
+  };
+  const [nYearlyType, setNYearlyType] = useState<string>('nYearlyType1');
+  const handleNYearlyTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNYearlyType(e.target.value);
+  };
+  const [nYearlyMonth, setNYearlyMonth] = useState<string>('january');
+  const handleNYearlyMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setNYearlyMonth(e.target.value);
+  };
+  const [nYearlyDay, setNYearlyDay] = useState<number>(1);
+  const handleNYearlyDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNYearlyDay(parseInt(e.target.value));
+  };
+  const [nYearlyOrderNumber, setNYearlyOrderNumber] = useState<string>('first');
+  const handleNYearlyOrderNumberChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setNYearlyOrderNumber(e.target.value);
+  };
+  const [nYearlyWeekDay, setNYearlyWeekDay] = useState<string>('monday');
+  const handleNYearlyWeekDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setNYearlyWeekDay(e.target.value);
+  };
+  const [nYearlyTime, setNYearlyTime] = useState<string>('00:00');
+  const handleNYearlyTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNYearlyTime(e.target.value);
+  };
+
   /** WARNING PROPS */
   // const [warningInterval, setWarningInterval] = useState<string>('minutes');
   // const handleWarningIntervalChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -366,6 +413,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           <option value="n-weekly">N-Weekly</option>
           <option value="monthly">Monthly</option>
           <option value="yearly">Yearly</option>
+          <option value="n-yearly">N-Yearly</option>
         </select>
       </div>
       
@@ -609,6 +657,99 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
         </div>
       )}
 
+      {reminderFormData.type === 'n-yearly' && (
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2" htmlFor="weeklyDay">
+            Yearly
+          </label>
+          This event occurs every
+          <input onChange={handleNYearlyYearsChange} value={nYearlyYears} type="number" min="1" id="nYearlyYears" name="nYearlyYears" className={`w-full p-2 border rounded-lg ${
+            formErrors.nYearlyYears ? 'border-red-500' : 'border-gray-300'
+          }`} />
+          years every 
+          <select
+            id="nYearlyMonth"
+            name="nYearlyMonth"
+            value={nYearlyMonth}
+            onChange={handleNYearlyMonthChange}
+            className={`mx-2 p-2 border rounded-lg ${
+              formErrors.nYearlyMonth ? 'border-red-500' : 'border-gray-300'
+            }`}
+          >
+            <option value="january">January</option>
+            <option value="february">February</option>
+            <option value="march">March</option>
+            <option value="april">April</option>
+            <option value="may">May</option>
+            <option value="june">June</option>
+            <option value="july">July</option>
+            <option value="august">August</option>
+            <option value="september">September</option>
+            <option value="october">October</option>
+            <option value="november">November</option>
+            <option value="december">December</option>
+          </select>
+          <div className="flex items-center">
+            <input
+              checked={nYearlyType === "yearlyType1"}
+              onChange={handleNYearlyTypeChange}
+              value="yearlyType1"
+              id="nYearlyType1" name="nYearlyType" type="radio" className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden [&:not(:checked)]:before:hidden" />
+            <label htmlFor="nYearlyType1" className="ml-3 text-sm/6 font-medium text-gray-900 flex items-center">
+              <span>on the</span>
+              <input onChange={handleNYearlyDayChange} value={nYearlyDay} type="number" min="1" max="31" id="nYearlyDay" name="nYearlyDay" className={`w-[50px] p-2 mx-2 border rounded-lg ${formErrors.nYearlyDay ? 'border-red-500' : 'border-gray-300'}`} />
+              <span>day of the month.</span>
+            </label>
+          </div>
+          <div className="flex items-center">
+            <input 
+              checked={nYearlyType === "yearlyType2"}
+              onChange={handleNYearlyTypeChange}
+              value="yearlyType2"
+              id="nYearlyType2" name="yearlyType" type="radio" className="relative size-4 appearance-none rounded-full border border-gray-300 bg-white before:absolute before:inset-1 before:rounded-full before:bg-white checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden [&:not(:checked)]:before:hidden" />
+            <label htmlFor="nYearlyType2" className="ml-3 text-sm/6 font-medium text-gray-900 flex items-center">
+              <span>on the</span>
+              <select
+                id="nYearlyOrderNumber"
+                name="nYearlyOrderNumber"
+                value={nYearlyOrderNumber}
+                onChange={handleNYearlyOrderNumberChange}
+                className={`mx-2 p-2 border rounded-lg ${
+                  formErrors.type ? 'border-red-500' : 'border-gray-300'
+                }`}
+              >
+                <option value="first">first</option>
+                <option value="second">second</option>
+                <option value="third">third</option>
+                <option value="fourth">fourth</option>
+              </select>
+              <select
+                id="nYearlyWeekDay"
+                name="nYearlyWeekDay"
+                value={nYearlyWeekDay}
+                onChange={handleNYearlyWeekDayChange}
+                className={`mx-2 p-2 border rounded-lg ${
+                  formErrors.type ? 'border-red-500' : 'border-gray-300'
+                }`}
+              >
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+                <option value="saturday">Saturday</option>
+                <option value="sunday">Sunday</option>
+              </select>
+              <span>of the month</span>
+            </label>
+          </div>
+          at
+          <input onChange={handleNYearlyTimeChange} value={nYearlyTime} type="time" id="nYearlyTime" name="nYearlyTime" className={`w-full p-2 border rounded-lg ${
+            formErrors.nYearlyTime ? 'border-red-500' : 'border-gray-300'
+          }`} />     
+        </div>
+      )}
+
       {/* Warnings */}
       <input
         className="mb-4"
@@ -669,6 +810,15 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
               </>
             )}
             {reminderFormData.type === 'yearly' && (
+              <>
+                <option value="minute">Minute(s)</option>
+                <option value="hour">Hour(s)</option>
+                <option value="day">Day(s)</option>
+                <option value="week">Week(s)</option>
+                <option value="month">Month(s)</option>
+              </>
+            )}
+            {reminderFormData.type === 'n-yearly' && (
               <>
                 <option value="minute">Minute(s)</option>
                 <option value="hour">Hour(s)</option>

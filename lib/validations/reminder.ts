@@ -6,8 +6,8 @@ export const CreateReminderSchema = z.object({
   name: z.string().nonempty("Name is required"),
   description: z.string().optional(),
   type: z.string().nonempty().refine(
-    (val) => ["one-time", "daily", "weekly", "n-weekly", "monthly", "yearly"].includes(val),
-    { message: "Type must be one of 'one-time', 'daily', 'weekly', 'n-weekly', 'monthly', 'yearly'." }
+    (val) => ["one-time", "daily", "weekly", "n-weekly", "monthly", "yearly", "n-yearly"].includes(val),
+    { message: "Type must be one of 'one-time', 'daily', 'weekly', 'n-weekly', 'monthly', 'yearly', 'n-yearly'." }
   ),
   config: z.string().refine((value) => {
     try {
@@ -33,8 +33,8 @@ export const UpdateReminderSchema = z.object({
   name: z.string().nonempty("Name is required"),
   description: z.string().optional(),
   type: z.string().nonempty().refine(
-    (val) => ["one-time", "daily", "weekly", "n-weekly", "monthly", "yearly"].includes(val),
-    { message: "Type must be one of 'one-time', 'daily', 'weekly', 'n-weekly', 'monthly', 'yearly'." }
+    (val) => ["one-time", "daily", "weekly", "n-weekly", "monthly", "yearly", "n-yearly"].includes(val),
+    { message: "Type must be one of 'one-time', 'daily', 'weekly', 'n-weekly', 'monthly', 'yearly', 'n-yearly'." }
   ),
   config: z.string().refine((value) => {
     try {
