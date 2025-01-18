@@ -1,4 +1,5 @@
 import { DashboardStatisticDto } from "@/lib/dtos/statistic";
+import { getCurrentUser } from "@/lib/session";
 import IReminderRepository from "repositories/IReminderRepository";
 import { ReminderRepository } from "repositories/ReminderRepository";
 
@@ -20,7 +21,12 @@ export class StatisticService {
     }
 
     public async getDashboardStatistics(): Promise<DashboardStatisticDto[]> {
-        const reminders = await this.reminderRepository.getAll();
+        const user = await getCurrentUser();
+        let reminders = await this.reminderRepository.getAll();
+
+        if(user?.role !== "admin") {
+            reminders = await this.reminderRepository.getAllByUserId(user?.id || "");
+        }
 
         const totalReminders = reminders.length;
         const disabledReminders = reminders.filter(reminder => reminder.isDisabled).length;
