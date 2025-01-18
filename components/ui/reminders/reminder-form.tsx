@@ -36,9 +36,9 @@ const defaultReminderValues: ReminderFormDataType = {
   isDisabled: false,
   lastSent: null,
   hasWarnings: false,
-  warningNumber: null,
-  warningInterval: null,
-  warningIntervalNumber: null,
+  warningNumber: 1,
+  warningInterval: 'minute',
+  warningIntervalNumber: 1,
 };
 
 export default function ReminderForm({ reminder }: ReminderFormProps) {
@@ -348,6 +348,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           Name
         </label>
         <input
+          required
           id="name"
           name="name"
           type="text"
@@ -383,6 +384,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           Type
         </label>
         <select
+          required
           id="type"
           name="type"
           value={reminderFormData.type}
@@ -403,7 +405,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
       </div>
       
       {/* REMINDER TYPE */}
-      <div className="p-4">
+      <div className="p-4 pt-2">
         {reminderFormData.type === 'one-time' && (
           <div className="mb-4">
             <div className="my-2">This event occurs once at</div>
@@ -724,7 +726,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
       </div>
 
       {/* Warnings */}
-      <div className="mt-4 mb-5">
+      <div className="mb-5">
         <input
           className=""
           type="checkbox"
