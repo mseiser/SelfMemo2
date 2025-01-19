@@ -1,14 +1,13 @@
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
 import UserSettingsForm from '@/components/ui/settings/userSettingsForm';
 import { getCurrentUser } from '@/lib/session';
-import { signOut } from 'next-auth/react';
 import { UserService } from 'services/UserService';
+import { redirect } from "next/navigation";
 
 export default async function RemindersPage() {
 
@@ -18,8 +17,7 @@ export default async function RemindersPage() {
     const user = await userService.getUserById(signedInUser?.id as string);
 
     if (!user) {
-        signOut();
-        return null;
+        redirect('/');
     }
 
     return (

@@ -35,13 +35,14 @@ export const DELETE = async (request: NextRequest) => {
 export const PUT = async (request: NextRequest) => {
     try {
         const user = await getCurrentUser();
-        if (!user || user.role !== "admin") {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
 
         // Extract user ID from the URL
         const url = new URL(request.url);
         const id = url.pathname.split("/").pop();
+
+        if (!user || (user.role !== "admin" && user.id !== id)) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
 
         if (!id || typeof id !== "string") {
             return new NextResponse("User ID is required", { status: 400 });
