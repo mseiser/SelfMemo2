@@ -79,18 +79,6 @@ model Reminder {
   warningIntervalNumber Int?
 
   user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ScheduledReminder ScheduledReminder[]
 
   @@map("reminders")
-}
-
-model ScheduledReminder {
-  id         String @id @default(cuid())
-  reminderId String @map("reminder_id")
-  timestamp  Int
-  isWarning Boolean
-
-  reminder Reminder @relation(fields: [reminderId], references: [id], onDelete: Cascade)
-
-  @@map("scheduledReminders")
 }

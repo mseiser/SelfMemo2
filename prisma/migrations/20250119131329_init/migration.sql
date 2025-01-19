@@ -63,16 +63,6 @@ CREATE TABLE "reminders" (
     CONSTRAINT "reminders_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "scheduledReminders" (
-    "id" TEXT NOT NULL,
-    "reminder_id" TEXT NOT NULL,
-    "timestamp" INTEGER NOT NULL,
-    "isWarning" BOOLEAN NOT NULL,
-
-    CONSTRAINT "scheduledReminders_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "accounts_provider_provider_account_id_key" ON "accounts"("provider", "provider_account_id");
 
@@ -93,6 +83,3 @@ ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_fkey" FOREIGN KEY ("user
 
 -- AddForeignKey
 ALTER TABLE "reminders" ADD CONSTRAINT "reminders_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "scheduledReminders" ADD CONSTRAINT "scheduledReminders_reminder_id_fkey" FOREIGN KEY ("reminder_id") REFERENCES "reminders"("id") ON DELETE CASCADE ON UPDATE CASCADE;

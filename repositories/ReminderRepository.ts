@@ -2,7 +2,6 @@ import { Reminder } from "@prisma/client";
 import { BaseRepository } from "./BaseRepository";
 import IReminderRepository from "./IReminderRepository";
 import { CreateReminderDto, UpdateReminderDto } from "@/lib/validations/reminder";
-import { ScheduledReminderService } from "services/ScheduledReminderService";
 
 export class ReminderRepository extends BaseRepository implements IReminderRepository {
     async getAll(): Promise<Reminder[]> {
@@ -28,8 +27,6 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
             },
         });
 
-        await ScheduledReminderService.getInstance().createScheduledReminders(newReminder);
-
         return newReminder;
     }
 
@@ -40,9 +37,6 @@ export class ReminderRepository extends BaseRepository implements IReminderRepos
             },
             data: reminder,
         });
-
-        await ScheduledReminderService.getInstance().deleteAllForReminder(updatedReminder.id);
-        await ScheduledReminderService.getInstance().createScheduledReminders(updatedReminder);
 
         return updatedReminder;
     }

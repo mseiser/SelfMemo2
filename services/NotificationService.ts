@@ -1,8 +1,7 @@
-import { Reminder, ScheduledReminder } from "@prisma/client";
+import { Reminder } from "@prisma/client";
 import nodemailer from 'nodemailer';
 import { UserService } from "./UserService";
 import { ReminderService } from "./ReminderService";
-import { ScheduledReminderService } from "./ScheduledReminderService";
 
 export class NotificationService {
   private static instance: NotificationService;
@@ -15,28 +14,6 @@ export class NotificationService {
     }
 
     return NotificationService.instance;
-  }
-
-  async checkIfReminderShouldBeNotified(date: Date, scheduledReminder: ScheduledReminder) {
-    const scheduledReminderDate = new Date(scheduledReminder.timestamp * 1000);
-
-    if(
-      date.getFullYear() === scheduledReminderDate.getFullYear() &&
-      date.getMonth() === scheduledReminderDate.getMonth() &&
-      date.getDate() === scheduledReminderDate.getDate() &&
-      date.getHours() === scheduledReminderDate.getHours() &&
-      date.getMinutes() === scheduledReminderDate.getMinutes()
-    ) {
-      const reminder = await ReminderService.getInstance().getById(scheduledReminder.reminderId);
-
-      if(!reminder) {
-        console.log('Reminder not found, skipping...');
-        return;
-      }
-
-      this.sendNotification(reminder, scheduledReminder.isWarning);
-      await ScheduledReminderService.getInstance().delete(scheduledReminder.id);
-    }
   }
 
   async sendNotification(reminder: Reminder, isWarning: boolean = false) {
@@ -57,6 +34,7 @@ export class NotificationService {
       subject = "SelfMemo Warning-Reminder: " + reminder.name;
     }
 
+    // TODO: add dear ... to mail content
     const userService = UserService.getInstance();
     const user = await userService.getUserById(reminder.userId);
     smtpTransport.sendMail(
@@ -80,5 +58,23 @@ export class NotificationService {
       const reminderService = ReminderService.getInstance();
       reminderService.updateReminderLastSent(reminder.id, Math.round((new Date().getTime() / 1000)));
     }
+  }
+
+  async checkIfReminderShouldBeNotified(date: Date, reminder: Reminder) {
+    const reminderTimestamps = await ReminderService.getInstance().getReminderTimestamps(date, reminder);
+    reminderTimestamps.forEach(async (reminderTimestamp) => {
+
+      const reminderDate = new Date(reminderTimestamp.timestamp * 1000);
+
+      if(
+        date.getFullYear() === reminderDate.getFullYear() &&
+        date.getMonth() === reminderDate.getMonth() &&
+        date.getDate() === reminderDate.getDate() &&
+        date.getHours() === reminderDate.getHours() &&
+        date.getMinutes() === reminderDate.getMinutes()
+      ) {
+        this.sendNotification(reminder, reminderTimestamp.isWarning);
+      }
+    });
   }
 };

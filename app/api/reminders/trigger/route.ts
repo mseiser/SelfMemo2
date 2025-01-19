@@ -1,22 +1,17 @@
 import { ReminderService } from "services/ReminderService";
 import { NextRequest } from "next/server";
 import { NotificationService } from "services/NotificationService";
-import { ScheduledReminderService } from "services/ScheduledReminderService";
 
 export async function GET(request: NextRequest) {
   try {
     const notificationService = NotificationService.getInstance();
-    const scheduledReminderService = ScheduledReminderService.getInstance();
-    const scheduledReminders = await scheduledReminderService.getAll();
     const reminders = await ReminderService.getInstance().getAll();
-    const now = new Date();
 
-    scheduledReminders.forEach((scheduledReminder) => {
-      notificationService.checkIfReminderShouldBeNotified(now, scheduledReminder);
-    });
+    const now = new Date();
+    now.setSeconds(0, 0);
 
     reminders.forEach(async (reminder) => {
-      await scheduledReminderService.createScheduledReminders(reminder);
+      await notificationService.checkIfReminderShouldBeNotified(now, reminder);
     });
 
     return new Response("OK");
