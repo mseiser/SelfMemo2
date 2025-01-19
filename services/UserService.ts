@@ -49,18 +49,18 @@ export class UserService {
 
         const user = await this.getUserById(userID);
 
-        if(!user) {
+        if (!user) {
             throw new Error('User not found');
         }
 
-        if(user.role !== 'admin') return await this.userRepository.delete(userID);
-    
+        if (user.role !== 'admin') return await this.userRepository.delete(userID);
+
         const isLastAdminUser = await this.checkIfLastAdminUser();
 
-        if(isLastAdminUser) {
+        if (isLastAdminUser) {
             throw new Error('Cannot delete last admin user');
         }
-        
+
         return await this.userRepository.delete(userID);
     }
 
@@ -92,6 +92,21 @@ export class UserService {
     }
 
     async updateUser(user: UpdateUserDto) {
+
+        const foundUser = await this.getUserById(user.id);
+
+        if (!foundUser) {
+            throw new Error('User not found');
+        }
+
+        if (foundUser.role !== 'admin') return await this.userRepository.update(user);
+
+        const isLastAdminUser = await this.checkIfLastAdminUser();
+        
+        if (user.role !== 'admin' && isLastAdminUser) {
+            throw new Error('Cannot change last admin user to non-admin');
+        }
+
         return await this.userRepository.update(user);
     }
 

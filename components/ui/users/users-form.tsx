@@ -6,6 +6,7 @@ import { User } from '@prisma/client';
 import { useToast } from 'hooks/useToast';
 import { useRouter } from 'next/navigation';
 import { formatTimestampAsDate, formatTimestampAsDateTime } from '@/lib/utils';
+import { Button } from '../button';
 
 type UserFormDataType = {
   id: string;
@@ -64,21 +65,25 @@ export default function UserForm({ user }: UserFormProps) {
         ...userFormData,
       };
 
-      if (isUpdate) {
-        await axios.put(`/api/users/${userFormData.id ?? ''}`, newFormData);
-        toast.success('User updated!', 'You have successfully updated the user.');
-      } else {
-        await axios.post('/api/users', newFormData);
-        toast.success('User created!', 'You have successfully created a new user.');
-      }
-      router.push('/users');
-    } catch (error) {
-      console.error(error);
+      let response = null;
 
       if (isUpdate) {
-        toast.error('Failed to update user.', 'An error occurred while updating the user.');
+        response = await axios.put(`/api/users/${userFormData.id ?? ''}`, newFormData);
+        toast.success('User updated!', 'You have successfully updated the user.');
       } else {
-        toast.error('Failed to create user.', 'An error occurred while creating the user.');
+        response = await axios.post('/api/users', newFormData);
+        toast.success('User created!', 'You have successfully created a new user.');
+      }
+
+      router.push('/users');
+    } catch (error: any) {
+
+      const message = error.response?.data?.message || 'An unexpected error occurred.';
+
+      if (isUpdate) {
+        toast.error('Failed to update user.', message);
+      } else {
+        toast.error('Failed to create user.', message);
       }
 
     } finally {
@@ -164,13 +169,13 @@ export default function UserForm({ user }: UserFormProps) {
       </div>
 
       {/* Submit Button */}
-      <button
+      <Button
         type="submit"
         className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition disabled:bg-gray-300"
         disabled={isSubmitting}
       >
         {isSubmitting ? 'Sending...' : (isUpdate ? 'Update User' : 'Create User')}
-      </button>
+      </Button>
     </form>
   );
 };

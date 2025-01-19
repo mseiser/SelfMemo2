@@ -5,10 +5,9 @@ export const CreateUserSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   role: z.enum(["admin", "user"]),
-  firstName: z.string(),
-  lastName: z.string()
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable()
 })
-
 
 export const UpdateUserSchema = CreateUserSchema.omit({ password: true }).extend({
   id: z.string()

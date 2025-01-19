@@ -6,7 +6,8 @@ import {
   PanelLeft,
   Users2,
   Calendar,
-  Bell
+  Bell,
+  Settings
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -50,27 +51,31 @@ export default async function DashboardLayout({
 function DesktopNav({ isAdmin }: { isAdmin: boolean }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        <Link
-          href="/"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-        >
-          <Bell className="h-3 w-3 transition-all group-hover:scale-110" />
-          <span className="sr-only">Reminders</span>
-        </Link>
+      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5 justify-between h-full">
+        <div className="flex flex-col items-center gap-4">
+          <Link
+            href="/"
+            className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+          >
+            <Bell className="h-3 w-3 transition-all group-hover:scale-110" />
+            <span className="sr-only">Reminders</span>
+          </Link>
 
-        {<NavItem href="/" label="Dashboard">
-          <Home className="h-5 w-5" />
-        </NavItem>}
+          {<NavItem href="/" label="Dashboard">
+            <Home className="h-5 w-5" />
+          </NavItem>}
 
-        {isAdmin ? <NavItem href="/users" label="Users">
-          <Users2 className="h-5 w-5" />
-        </NavItem> : null}
+          {isAdmin ? <NavItem href="/users" label="Users">
+            <Users2 className="h-5 w-5" />
+          </NavItem> : null}
 
-        <NavItem href="/reminders" label="Reminders">
-          <Calendar className="h-5 w-5" />
+          <NavItem href="/reminders" label="Reminders">
+            <Calendar className="h-5 w-5" />
+          </NavItem>
+        </div>
+        <NavItem href="/settings" label="Settings">
+          <Settings className="h-5 w-5" />
         </NavItem>
-
       </nav>
     </aside>
   );
@@ -120,10 +125,10 @@ function MobileNav({ isAdmin }: { isAdmin: boolean }) {
           </Link>
 
           <Link
-            href="/"
+            href="/settings"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <LineChart className="h-5 w-5" />
+            <Settings className="h-5 w-5" />
             Settings
           </Link>
         </nav>

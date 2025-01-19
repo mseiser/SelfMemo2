@@ -6,6 +6,7 @@ import Pagination from "./Pagination";
 import { useSWRConfig } from "swr";
 import NoSearchResults from "./NoSearchResults";
 import { useToast } from "hooks/useToast";
+import { Button } from "./button";
 interface INFDynamicList {
   data: any[];
   fields: string[];
@@ -200,14 +201,14 @@ const DynamicList: FC<INFDynamicList> = ({
     if (!bulkActions) return null;
 
     return Object.keys(bulkActions).map((key, index) => (
-      <button
+      <Button
         key={key + index}
         type="button"
         className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
         onClick={() => bulkActions[key](selectedData)}
       >
         {key}
-      </button>
+      </Button>
     ));
   };
 
@@ -239,13 +240,13 @@ const DynamicList: FC<INFDynamicList> = ({
                 {selectedData.length > 0 && (
                   <div className="absolute left-12 flex h-12 items-center space-x-3 bg-white z-10">
                     {!readonly ? (
-                      <button
+                      <Button
                         type="button"
                         className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
                         onClick={() => bulkDelete(entity ?? "")}
                       >
                         Delete
-                      </button>
+                      </Button>
                     ) : null}
                     {renderBulkActions()}
                   </div>

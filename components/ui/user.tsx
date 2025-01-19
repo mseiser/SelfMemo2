@@ -36,7 +36,7 @@ export function User() {
         <DropdownMenuLabel>{session?.user.email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <button onClick={() => signOut()}>Sign Out</button>
+          <Button onClick={() => signOut()}>Sign Out</Button>
         </DropdownMenuItem>
 
       </DropdownMenuContent>
