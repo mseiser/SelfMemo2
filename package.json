@@ -3,9 +3,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "postinstall": "prisma generate",
     "start": "next start"
-
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.1",
