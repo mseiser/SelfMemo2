@@ -53,10 +53,9 @@ export class NotificationService {
     const user = await userService.getUserById(reminder.userId);
 
     let bodyTemplate = NotificationService.notificationTemplates[isWarning ? 'warningBody' : 'reminderBody'];
-    let body = bodyTemplate
-      .replace('{{userName}}', `${user?.firstName || 'User'} ${user?.lastName || ''}`.trim())
-      .replace('{{reminderName}}', reminder.name)
-      .replace('{{reminderDescription}}', reminder.description);
+    let body = bodyTemplate.replace('{{firstName}}', user?.firstName || '')
+                           .replace('{{lastName}}', user?.lastName || '')
+                           .replace('{{description}}', reminder.description);
 
     smtpTransport.sendMail(
       {
