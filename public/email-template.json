@@ -1,0 +1,10 @@
+{
+  "reminder": {
+    "subject": "SelfMemo Reminder: {{reminderName}}",
+    "body": "Hello {{firstName}} {{lastName}},\n\nYou have a new reminder: {{reminderName}}.\n\nDescription: {{description}}\n\nBest regards,\nYour Reminder App"
+  },
+  "warning": {
+    "subject": "SelfMemo Warning-Reminder: {{reminderName}}",
+    "body": "Hello {{firstName}} {{lastName}},\n\nThis is a warning reminder for: {{reminderName}}.\n\nDescription: {{description}}\n\nBest regards,\nYour Reminder App"
+  }
+}

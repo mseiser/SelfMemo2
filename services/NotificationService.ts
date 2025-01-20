@@ -3,10 +3,21 @@ import nodemailer from 'nodemailer';
 import { UserService } from "./UserService";
 import { ReminderService } from "./ReminderService";
 
+async function getTemplates() {
+  const file = await fetch(process.env.TEMPLATES_PATH + "/email-templates.json");
+  const templates = await file.json();
+  return templates;
+}
+
 export class NotificationService {
   private static instance: NotificationService;
+  private static notificationTemplates: { [key: string]: string };
 
-  private constructor() {}
+  private constructor() {
+    getTemplates().then((templates) => {
+      NotificationService.notificationTemplates = templates;
+    });
+  }
 
   public static getInstance(): NotificationService {
     if (!NotificationService.instance) {
@@ -29,33 +40,38 @@ export class NotificationService {
         },
     });
 
-    let subject = "SelfMemo Reminder: " + reminder.name;
-    if(isWarning) {
-      subject = "SelfMemo Warning-Reminder: " + reminder.name;
-    }
 
-    // TODO: add dear ... to mail content
+    let subjectTemplate = NotificationService.notificationTemplates[isWarning ? 'warningSubject' : 'reminderSubject'];
+    let subject = subjectTemplate.replace('{{reminderName}}', reminder.name);
+
     const userService = UserService.getInstance();
     const user = await userService.getUserById(reminder.userId);
+
+    let bodyTemplate = NotificationService.notificationTemplates[isWarning ? 'warningBody' : 'reminderBody'];
+    let body = bodyTemplate
+      .replace('{{userName}}', `${user?.firstName || 'User'} ${user?.lastName || ''}`.trim())
+      .replace('{{reminderName}}', reminder.name)
+      .replace('{{reminderDescription}}', reminder.description);
+
     smtpTransport.sendMail(
       {
-        from: process.env.SMTP_MAIL,
-        to: user?.email,
-        subject: subject,
-        text: reminder.description,
+      from: process.env.SMTP_MAIL,
+      to: user?.email,
+      subject: subject,
+      text: body,
       },
       function (error, response) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log({
-            from: process.env.SMTP_MAIL,
-            to: user?.email,
-            subject: subject,
-            text: reminder.description
-          });
-          console.log("Message sent: " + response);
-        }
+      if (error) {
+      console.log(error);
+      } else {
+      console.log({
+      from: process.env.SMTP_MAIL,
+      to: user?.email,
+      subject: subject,
+      text: body
+      });
+      console.log("Message sent: " + response);
+      }
       }
     );
 
