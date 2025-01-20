@@ -2,7 +2,7 @@ import { Reminder } from "@prisma/client";
 import nodemailer from 'nodemailer';
 import { UserService } from "./UserService";
 import { ReminderService } from "./ReminderService";
-import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
+import template from 'public/email-template.json';
 
 type Template = {
   warningSubject: string;
@@ -11,24 +11,22 @@ type Template = {
   reminderBody: string;
 };
 
-const getTemplates = (async () => {
-  const res = await fetch(`${process.env.TEMPLATE_PATH}/email-templates.json`);
-  const template: Template = await res.json();
-  return {props: { templates: template }};
-}) satisfies GetServerSideProps<{ templates: Template }>;
-
 export class NotificationService {
   private static instance: NotificationService;
   private static notificationTemplates: Template;
 
-  private constructor({templates}: InferGetServerSidePropsType<typeof getTemplates>) {
-    NotificationService.notificationTemplates = templates
+  private constructor() {
+    NotificationService.notificationTemplates = {
+      warningSubject: template.warning.subject,
+      warningBody: template.warning.body,
+      reminderSubject: template.reminder.subject,
+      reminderBody: template.reminder.body,
+    };
   }
 
-  public static async getInstance(): Promise<NotificationService> {
+  public static getInstance() {
     if (!NotificationService.instance) {
-      const templates = (await getTemplates()).props.templates;
-      NotificationService.instance = new NotificationService({ templates });
+      NotificationService.instance = new NotificationService();
     }
 
     return NotificationService.instance;
