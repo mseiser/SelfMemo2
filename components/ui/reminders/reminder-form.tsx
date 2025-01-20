@@ -725,9 +725,9 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
         {reminderFormData.hasWarnings && (
           <div className="mb-4">
             Additionally, before sending the final reminder, send me
-            <input onChange={handleChange} value={reminderFormData.warningNumber ?? undefined} id="warningNumber" name="warningNumber" type="number" className="mx-2 w-14 p-2 border rounded-lg" />
+            <input onChange={handleChange} value={reminderFormData.warningNumber ?? undefined} id="warningNumber" name="warningNumber" type="number" className="mx-2 w-14 p-2 border rounded-lg" min="1"/>
             reminder(s)
-            <input onChange={handleChange} value={reminderFormData.warningIntervalNumber ?? undefined} id="warningIntervalNumber" name="warningIntervalNumber" type="number" className="mx-2 w-14 p-2 border rounded-lg" />
+            <input onChange={handleChange} value={reminderFormData.warningIntervalNumber ?? undefined} id="warningIntervalNumber" name="warningIntervalNumber" type="number" className="mx-2 w-14 p-2 border rounded-lg" min="0" />
             <select
               id="warningInterval"
               name="warningInterval"
