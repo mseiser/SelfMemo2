@@ -4,7 +4,7 @@ import { UserService } from "./UserService";
 import { ReminderService } from "./ReminderService";
 
 async function getTemplates() {
-  const file = await fetch(process.env.TEMPLATES_PATH + "/email-templates.json");
+  const file = await fetch(process.env.TEMPLATE_PATH + "/email-template.json");
   const templates = await file.json();
   return templates;
 }
