@@ -2,26 +2,33 @@ import { Reminder } from "@prisma/client";
 import nodemailer from 'nodemailer';
 import { UserService } from "./UserService";
 import { ReminderService } from "./ReminderService";
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
 
-async function getTemplates() {
-  const file = await fetch(process.env.TEMPLATE_PATH + "/email-template.json");
-  const templates = await file.json();
-  return templates;
-}
+type Template = {
+  warningSubject: string;
+  warningBody: string;
+  reminderSubject: string;
+  reminderBody: string;
+};
+
+const getTemplates = (async () => {
+  const res = await fetch(`${process.env.TEMPLATE_PATH}/email-templates.json`);
+  const template: Template = await res.json();
+  return {props: { templates: template }};
+}) satisfies GetServerSideProps<{ templates: Template }>;
 
 export class NotificationService {
   private static instance: NotificationService;
-  private static notificationTemplates: { [key: string]: string };
+  private static notificationTemplates: Template;
 
-  private constructor() {
-    getTemplates().then((templates) => {
-      NotificationService.notificationTemplates = templates;
-    });
+  private constructor({templates}: InferGetServerSidePropsType<typeof getTemplates>) {
+    NotificationService.notificationTemplates = templates
   }
 
-  public static getInstance(): NotificationService {
+  public static async getInstance(): Promise<NotificationService> {
     if (!NotificationService.instance) {
-      NotificationService.instance = new NotificationService();
+      const templates = (await getTemplates()).props.templates;
+      NotificationService.instance = new NotificationService({ templates });
     }
 
     return NotificationService.instance;
