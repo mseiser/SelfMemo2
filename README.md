@@ -16,7 +16,7 @@ It is the enhancement of the previous project: https://github.com/Self-Memo/Self
 ### Local Environment
 - Clone/Fork this repository
 - ```cd``` into the application folder
-- run ```npm install```
+- Run ```npm install```
 
 Create a ```.env``` file in the root directory of your repository and set the following env variables:\
 DATABASE_URL=\
@@ -39,9 +39,9 @@ ADMIN_EMAIL=\
 ADMIN_NAME=\
 ADMIN_PASSWORD=\
 
-- run ```npx prisma migrate dev``` to migrate the database schema
+- Run ```npx prisma migrate dev``` to migrate the database schema
 - ```npm run dev``` to start your application
-- hit once ```GET http://localhost:3000/api/seed``` in order to create your admin account
+- Hit once ```GET http://localhost:3000/api/seed``` in order to create your admin account
 
 Your application should be up and running on localhost:3000 and you should be able to login.
 
