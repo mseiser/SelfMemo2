@@ -10,7 +10,7 @@ It is the enhancement of the previous project: https://github.com/Self-Memo/Self
 - [GitHub](https://github.com/) Account
 - [Vercel](https://vercel.com/) Account
 - SMTP Account
-- [cron-job.org](https://cron-job.org/) Accout
+- [cron-job.org](https://cron-job.org/) Account
 - [Neon Serverless Postgres](https://neon.tech/) Account + DB
 
 ### Local Environment
