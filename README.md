@@ -2,6 +2,10 @@
 
 This repository contains the work for VU Information and Web-Architecture 24/25.
 
+SelfMemo 2.0 is an E-Mail reminder service where you can create reminders for different events (daily, weekly, monthly, yearly, ...).
+
+![SelfMemo 2.0 Screenshot](app-screenshot.png "SelfMemo 2.0 Screenshot")
+
 It is the enhancement of the previous project: https://github.com/Self-Memo/SelfMemo
 
 ## Getting Started
