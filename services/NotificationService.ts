@@ -66,7 +66,7 @@ export class NotificationService {
       },
       function (error, response) {
       if (error) {
-      console.log(error);
+      console.error(error);
       } else {
       console.log({
       from: process.env.SMTP_MAIL,
@@ -88,7 +88,6 @@ export class NotificationService {
 
   async checkIfReminderShouldBeNotified(date: Date, reminder: Reminder) {
     const reminderTimestamps = await ReminderService.getInstance().getReminderTimestamps(date, reminder);
-    console.log('timestamps:');
     reminderTimestamps.forEach(async (reminderTimestamp) => {
       console.log((new Date(reminderTimestamp.timestamp * 1000)).toISOString());
 

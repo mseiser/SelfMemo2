@@ -13,6 +13,14 @@ export const UpdateUserSchema = CreateUserSchema.omit({ password: true }).extend
   id: z.string()
 })
 
+export const UpdateUserPasswordSchema = z.object({
+  id: z.string(),
+  currentPassword: z.string(),
+  newPassword: z.string().min(4)
+})
+
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;
 
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
+
+export type UpdateUserPasswordDto = z.infer<typeof UpdateUserPasswordSchema>;

@@ -12,7 +12,7 @@ interface IDashboardCardProps {
 const DashboardCard: FC<IDashboardCardProps> = ({ stats }) => {
   return (
     <div >
-      <dl className="grid grid-cols-1 gap-1 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-5">
+      <dl className="grid grid-cols-1 gap-1 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <div key={stat.name} className="flex flex-col bg-gray-400/5 p-8">
             <dt className="text-sm/6 font-semibold text-gray-600">{stat.name}</dt>

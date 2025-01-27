@@ -51,8 +51,7 @@ export class StatisticService {
             { name: "Total Reminders", value: totalReminders.toString() },
             { name: "Disabled Reminders", value: disabledReminders.toString() },
             { name: "Reminders with Warnings", value: remindersWithWarnings.toString() },
-            { name: "Average Warnings per Reminder", value: averageWarningsPerReminder },
-            { name: "Reminders Sent Today", value: remindersSentToday.toString() },
+            { name: "Average Warnings per Reminder", value: averageWarningsPerReminder }
         ]
     }
 

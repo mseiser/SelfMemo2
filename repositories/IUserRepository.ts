@@ -8,4 +8,5 @@ export default interface IUserRepository {
     getById(id: string): Promise<User | null>;
     getAll(): Promise<User[]>;
     getByEmail(email: string): Promise<User | null>;
+    updatePassword(id: string, newPassword: string): Promise<User>;
 }

@@ -1,4 +1,4 @@
-import { CreateUserDto, UpdateUserDto } from "@/lib/validations/user";
+import { CreateUserDto, UpdateUserDto, UpdateUserPasswordDto } from "@/lib/validations/user";
 import IUserRepository from "repositories/IUserRepository";
 import { UserRepository } from "repositories/UserRepository";
 import bcrypt from "bcryptjs";
@@ -102,12 +102,30 @@ export class UserService {
         if (foundUser.role !== 'admin') return await this.userRepository.update(user);
 
         const isLastAdminUser = await this.checkIfLastAdminUser();
-        
+
         if (user.role !== 'admin' && isLastAdminUser) {
             throw new Error('Cannot change last admin user to non-admin');
         }
 
         return await this.userRepository.update(user);
+    }
+
+    async updatePassword(updateUserPasswordDto: UpdateUserPasswordDto) {
+        const user = await this.getUserById(updateUserPasswordDto.id);
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const isPasswordValid = await bcrypt.compare(updateUserPasswordDto.currentPassword, user.password);
+
+        if (!isPasswordValid) {
+            throw new Error('Current password is incorrect');
+        }
+
+        const hashedPassword = await bcrypt.hash(updateUserPasswordDto.newPassword, 10);
+
+        return await this.userRepository.updatePassword(updateUserPasswordDto.id, hashedPassword);
     }
 
     async createDefaultAdminUser() {

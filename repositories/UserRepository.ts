@@ -58,4 +58,15 @@ export class UserRepository extends BaseRepository implements IUserRepository {
         });
     }
 
+    async updatePassword(id: string, newPassword: string): Promise<User> {
+        return await this.prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                password: newPassword,
+            },
+        });
+    }
+
 }
