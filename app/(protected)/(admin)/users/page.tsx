@@ -111,46 +111,45 @@ export default function UsersPage() {
               </SheetHeader>
               <div className="space-y-4 mt-4">
                 <div>
-                  <label className="block text-sm font-medium">First Name:</label>
+                  <label className="block text-sm font-medium mb-2">First-Name</label>
                   <Input
                     value={firstName}
                     type='text'
                     onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="Enter users firstname"
+                    placeholder="Enter First-Name"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium">Last Name:</label>
+                  <label className="block text-sm font-medium mb-2">Last-Name</label>
                   <Input
                     value={lastName}
                     type='text'
                     onChange={(e) => setLastName(e.target.value)}
-                    placeholder="Enter users surname"
+                    placeholder="Enter Last-Name"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium">Email:</label>
+                  <label className="block text-sm font-medium mb-2">E-Mail</label>
                   <Input
                     value={email}
                     type='email'
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter user email"
+                    placeholder="Enter E-Mail"
                   />
                   {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium">Password:</label>
+                  <label className="block text-sm font-medium mb-2">Password</label>
                   <Input
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     type='password'
-                    placeholder="Enter user password"
+                    placeholder="Enter password"
                   />
                   {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium">Role:</label>
-
+                  <label className="block text-sm font-medium mb-2">Role</label>
                   <select
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
