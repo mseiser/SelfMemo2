@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { UpdateReminderSchema } from "@/lib/validations/reminder";
 import { z } from "zod";
 import { getCurrentUser } from "@/lib/session";
+import { UserService } from "services/UserService";
 
 export async function PUT(request: NextRequest) {
   try {
@@ -11,8 +12,10 @@ export async function PUT(request: NextRequest) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
+    const userObject = await UserService.getInstance().getUserById(user.id ?? '');
     const requestBody = await request.json();
-    if(requestBody.userId !== user.id) {
+
+    if(!userObject || (userObject?.role !== 'admin' && requestBody.userId !== user.id)) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
