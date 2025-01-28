@@ -798,7 +798,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           id="isDisabled"
           checked={!reminderFormData.isDisabled}
           onChange={handleIsActiveCheckboxChange}
-        /> <label htmlFor="hasWarnings">Is active</label>
+        /> <label htmlFor="isDisabled">Is active</label>
       </div>
 
       {/* Submit Button */}
