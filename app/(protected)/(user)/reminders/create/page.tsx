@@ -13,7 +13,7 @@ export default function RemindersCreatePage() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Create new reminder</CardTitle>
+                <CardTitle>Create New Reminder</CardTitle>
             </CardHeader>
             <CardContent>
                 <ReminderForm />

@@ -8,13 +8,11 @@ export default async function DashboardPage() {
   const dashboardStats = await StatisticService.getInstance().getDashboardStatistics();
 
   return (
-    <Card>
-      <CardHeader>
-      <DashboardCard stats={dashboardStats} />
-      </CardHeader>
-      <CardContent>
-      
-      </CardContent>
-    </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle className='mb-4'>Dashboard</CardTitle>
+          <DashboardCard stats={dashboardStats} />
+        </CardHeader>
+      </Card>
   );
 }

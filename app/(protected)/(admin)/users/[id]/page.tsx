@@ -20,7 +20,7 @@ export default async function RemindersEditPage({ params }: { params: Params }) 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Edit user</CardTitle>
+                <CardTitle>Edit User</CardTitle>
             </CardHeader>
             <CardContent>
                 <UserForm user={user ?? undefined} />

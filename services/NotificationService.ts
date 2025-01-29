@@ -59,23 +59,23 @@ export class NotificationService {
 
     smtpTransport.sendMail(
       {
-      from: process.env.SMTP_MAIL,
-      to: user?.email,
-      subject: subject,
-      text: body,
+        from: process.env.SMTP_MAIL,
+        to: user?.email,
+        subject: subject,
+        text: body,
       },
       function (error, response) {
-      if (error) {
-      console.error(error);
-      } else {
-      console.log({
-      from: process.env.SMTP_MAIL,
-      to: user?.email,
-      subject: subject,
-      text: body
-      });
-      console.log("Message sent: " + response);
-      }
+        if (error) {
+          console.error(error);
+        } else {
+          console.log({
+            from: process.env.SMTP_MAIL,
+            to: user?.email,
+            subject: subject,
+            text: body
+          });
+          console.log("Message sent: " + response);
+        }
       }
     );
 
@@ -89,8 +89,6 @@ export class NotificationService {
   async checkIfReminderShouldBeNotified(date: Date, reminder: Reminder) {
     const reminderTimestamps = await ReminderService.getInstance().getReminderTimestamps(date, reminder);
     reminderTimestamps.forEach(async (reminderTimestamp) => {
-      console.log((new Date(reminderTimestamp.timestamp * 1000)).toISOString());
-
       const reminderDate = new Date(reminderTimestamp.timestamp * 1000);
 
       if(

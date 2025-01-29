@@ -20,7 +20,7 @@ export default async function RemindersEditPage({ params }: {params: Params}) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Edit reminder</CardTitle>
+                <CardTitle>Edit Reminder</CardTitle>
             </CardHeader>
             <CardContent>
                 <ReminderForm reminder={reminder} />

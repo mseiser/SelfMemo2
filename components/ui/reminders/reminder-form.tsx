@@ -38,7 +38,7 @@ const defaultReminderValues: ReminderFormDataType = {
   lastSent: null,
   hasWarnings: false,
   warningNumber: 1,
-  warningInterval: 'minute',
+  warningInterval: '',
   warningIntervalNumber: 1,
 };
 
@@ -118,14 +118,45 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
       hasWarnings: event.target.checked,
     }));
   };
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setReminderFormData((prev) => ({
+      ...prev,
+      [name]: (name === 'timestamp' || name === 'warningNumber' || name === 'warningIntervalNumber') ? Number(value) : value,
+    }));
+
+    if(!isUpdate) {
+      switch(value) {
+        case 'one-time':
+          defaultReminderValues.warningInterval = 'day';
+          break;
+        case 'daily':
+          defaultReminderValues.warningInterval = 'hour';
+          break;
+        case 'weekly':
+        case 'n-weekly':
+        case 'monthly':
+          defaultReminderValues.warningInterval = 'day';
+          break;
+        case 'yearly':
+        case 'n-yearly':
+          defaultReminderValues.warningInterval = 'week';
+          break;
+        default:
+          defaultReminderValues.warningInterval = 'minute';
+      }
+      setReminderFormData((prev) => ({
+        ...prev,
+        warningInterval: defaultReminderValues.warningInterval,
+      }));
+    }
+  };
 
   const handleIsActiveCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-
     setReminderFormData((prev) => ({
       ...prev,
       isDisabled: !event.target.checked,
     }));
-
   }
 
   // handle form submission
@@ -395,7 +426,7 @@ export default function ReminderForm({ reminder }: ReminderFormProps) {
           id="type"
           name="type"
           value={reminderFormData.type}
-          onChange={handleChange}
+          onChange={handleTypeChange}
           className={`w-full p-2 border rounded-lg ${formErrors.type ? 'border-red-500' : 'border-gray-300'
             }`}
         >
